@@ -1,0 +1,41 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 32px;
+  background: #1A1A1A66;
+  z-index: 2;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo p {
+ font-weight: bold;
+ font-size: 1.2rem;
+}
+
+.nav-links a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: #E0E0E0;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #FFD700;
+}
+
+.connect-btn {
+  background: #FFD700;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: #000000;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 16px;
+}

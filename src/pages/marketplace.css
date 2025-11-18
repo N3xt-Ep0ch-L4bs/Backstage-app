@@ -1,0 +1,269 @@
+.market-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 32px;
+  background: transparent;
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 95%;
+  z-index: 999; 
+}
+
+.marketplace-container {
+    margin-top: 50px;
+  display: flex;
+  background: #000000;
+  color: #fff;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: #111;
+  padding: 20px;
+  border-radius: 10px;
+  height: fit-content;
+  position: sticky;
+  top: 20px;
+}
+
+.sidebar h3 {
+  font-size: 14px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  color: #ccc;
+  text-transform: uppercase;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.sidebar ul li:hover {
+  color: #fff;
+}
+
+.price-range {
+  display: flex;
+  gap: 10px;
+}
+
+.price-range input {
+  width: 100%;
+  padding: 8px 10px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #fff;
+}
+
+.sidebar input[type="text"] {
+  width: 90%;
+  padding: 8px 10px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.apply-btn {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+  background: #1e90ff;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.apply-btn:hover {
+  opacity: 0.8;
+}
+
+/* Main Content */
+.marketplace-main {
+  flex: 1;
+  flex-direction: column;
+  padding-left: 30px;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 80px;
+}
+
+.top-bar h1 {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* Search Box */
+.search-box {
+  background: #111;
+  padding: 8px 12px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #333;
+}
+
+.search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+}
+
+/* Cards Grid */
+.grid-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.media-card {
+  background: #111;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #222;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.media-card:hover {
+  transform: scale(1.03);
+}
+
+.media-card img {
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+}
+
+.card-info {
+  padding: 12px;
+}
+
+.card-info h4 {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.card-info p {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.card-type {
+  color: crimson;
+  font-size: 0.7rem;
+}
+
+.card-access {
+    margin-top: 5px;
+  color: #1e90ff;
+  font-size: 0.8rem;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.pagination button {
+  background: #111;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  background: #1e90ff;
+  border-color: #1e90ff;
+}
+
+.pagination button:hover {
+  background: #222;
+}
+
+
+/* Dropdown Containers */
+.dropdown {
+  margin-bottom: 18px;
+}
+
+.dropdown-header {
+  width: 100%;
+  background: #1a1a1a;
+  color: #ccc;
+  border: 1px solid #333;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.dropdown-header:hover {
+  background: #222;
+}
+
+.dropdown-body {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  margin-top: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dropdown-body label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.dropdown-body input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1e90ff;
+}
+
+.filter-section input[type="text"] {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: white;
+}
+
