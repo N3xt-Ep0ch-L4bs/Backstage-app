@@ -1,11 +1,27 @@
 import React from "react";
-import "./creatorDashboard.css";
+import EarningsIcon from "../assets/earnings.png";
+import ViewsIcon from "../assets/views.png";
+import UploadBTS from "./uploadbts";
+import PassesIcon from "../assets/passes.png";
+import SubscribersIcon from "../assets/suscribers.png";
+import {
+  Activity,
+  Video,
+  Shield,
+  ChartArea,
+  UsersRound,
+  Settings,
+  Wallet,
+  CloudUpload,
+} from "lucide-react";
+import "./creatorsdashboard.css";
 
 interface StatItem {
   label: string;
   value: string;
   change: string;
-  color: "yellow" | "sky" | "indigo" | "emerald";
+  color: string;
+  icon: string;
 }
 
 interface RecentItem {
@@ -14,12 +30,14 @@ interface RecentItem {
   badge?: string;
 }
 
-export default function CreatorDashboard(): JSX.Element {
+export default function CreatorDashboard() {
+  const [activeTab, setActiveTab] = React.useState("Dashboard");
+
   const stats: StatItem[] = [
-    { label: "Total Earnings", value: "$12,450", change: "+$2,340 this month", color: "yellow" },
-    { label: "Total Views", value: "156,247", change: "+12.5% this month", color: "sky" },
-    { label: "Passes Sold", value: "1,240", change: "+2% this week", color: "indigo" },
-    { label: "Active Subscribers", value: "342", change: "+3% this week", color: "emerald" },
+    { label: "Total Earnings", value: "$12,450", change: "+$2,340 this month", color: "#FFD70026", icon: EarningsIcon },
+    { label: "Total Views", value: "156,247", change: "+12.5% this month", color: "#0078FF26", icon: ViewsIcon },
+    { label: "Passes Sold", value: "1,240", change: "+2% this week", color: "#0078FF26", icon: PassesIcon },
+    { label: "Active Subscribers", value: "342", change: "+3% this week", color: "#0078FF26", icon: SubscribersIcon },
   ];
 
   const recent: RecentItem[] = [
@@ -34,7 +52,7 @@ export default function CreatorDashboard(): JSX.Element {
       <div className="dashboard-inner">
         <div className="layout">
           {/* Sidebar */}
-          <aside className="sidebar">
+          <aside className="dashboard-sidebar">
             <div className="sidebar-header">
               <div className="sidebar-logo">B</div>
               <div>
@@ -44,14 +62,26 @@ export default function CreatorDashboard(): JSX.Element {
             </div>
 
             <nav className="nav-links">
-              <a className="nav-item active">Dashboard</a>
-              <a className="nav-item">Upload BTS Video</a>
-              <a className="nav-item">My Content</a>
-              <a className="nav-item">Access Policies</a>
-              <a className="nav-item">Analytics</a>
-              <a className="nav-item">Subscribers</a>
-              <a className="nav-item">Earnings</a>
-              <a className="nav-item">Settings</a>
+              <a
+                className={`nav-item ${activeTab === "Dashboard" ? "active" : ""}`}
+                onClick={() => setActiveTab("Dashboard")}
+              >
+                <Activity size={16} /> Dashboard
+              </a>
+
+              <a
+                className={`nav-item ${activeTab === "UploadBTS" ? "active" : ""}`}
+                onClick={() => setActiveTab("UploadBTS")}
+              >
+                <CloudUpload size={18} /> Upload BTS Video
+              </a>
+
+              <a className="nav-item"><Video size={18} /> My Content</a>
+              <a className="nav-item"><Shield size={18} /> Access Policies</a>
+              <a className="nav-item"><ChartArea size={18} /> Analytics</a>
+              <a className="nav-item"><UsersRound size={18} /> Subscribers</a>
+              <a className="nav-item"><Wallet size={18} /> Earnings</a>
+              <a className="nav-item"><Settings size={18} /> Settings</a>
             </nav>
 
             <div className="sidebar-footer">© 2024 Backstage</div>
@@ -59,75 +89,92 @@ export default function CreatorDashboard(): JSX.Element {
 
           {/* Main */}
           <main className="main">
-            {/* Header */}
             <header className="main-header">
               <div>
-                <h1 className="main-title">Welcome back</h1>
-                <p className="main-subtitle">Here’s what’s happening with your content today</p>
+                <h1 className="main-title">
+                  {activeTab === "Dashboard" ? "Welcome back" : "Upload BTS Video"}
+                </h1>
+
+                <p className="main-subtitle">
+                  {activeTab === "Dashboard"
+                    ? "Here’s what’s happening with your content today"
+                    : "Upload your behind-the-scenes footage for your subscribers"}
+                </p>
               </div>
 
               <div className="header-right">
-                <button className="upload-btn">+ Upload New BTS</button>
+                <button
+                  className="upload-btn"
+                  onClick={() => setActiveTab("UploadBTS")}
+                >
+                  + Upload New BTS
+                </button>
                 <div className="profile-box">Profile</div>
               </div>
             </header>
 
-            {/* Stats */}
-            <section className="stats-grid">
-              {stats.map((s) => (
-                <div key={s.label} className="stat-card">
-                  <div className="stat-content">
-                    <div>
-                      <div className="stat-label">{s.label}</div>
-                      <div className="stat-value">{s.value}</div>
-                      <div className="stat-change">{s.change}</div>
-                    </div>
+            {/* Main Content Switching */}
+            {activeTab === "Dashboard" && (
+              <>
+                {/* Stats */}
+                <section className="stats-grid">
+                  {stats.map((s) => (
+                    <div key={s.label} className="stat-card">
+                      <div className="stat-content">
+                        <div>
+                          <div className="stat-label">{s.label}</div>
+                          <div className="stat-value">{s.value}</div>
+                          <div className="stat-change">{s.change}</div>
+                        </div>
 
-                    <div className={`stat-icon ${s.color}`}>
-                      <svg width="18" height="18" viewBox="0 0 24 24">
-                        <path d="M12 2v20" stroke="currentColor" strokeWidth="1.5" />
-                        <path d="M5 12h14" stroke="currentColor" strokeWidth="1.5" />
-                      </svg>
-                    </div>
-                  </div>
+                        <div
+                          className="stat-icon"
+                          style={{ backgroundColor: s.color }}
+                        >
+                          <img src={s.icon} alt="" />
+                        </div>
+                      </div>
 
-                  <div className="sparkline">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <div key={i} className={`bar bar-${s.color} bar-h${i}`} />
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </section>
-
-            {/* Recent activity */}
-            <section className="recent-section">
-              <div className="recent-header">
-                <h2 className="recent-title">Recent Activity</h2>
-                <a className="view-all">View All</a>
-              </div>
-
-              <div className="recent-list">
-                {recent.map((r, idx) => (
-                  <div key={idx} className="recent-item">
-                    <div className="recent-left">
-                      <div className="recent-icon">📦</div>
-                      <div>
-                        <div className="recent-text">{r.title}</div>
-                        <div className="recent-time">{r.time}</div>
+                      <div className="sparkline">
+                        {Array.from({ length: 6 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className={`bar bar-h${i}`}
+                            style={{ backgroundColor: s.color }}
+                          />
+                        ))}
                       </div>
                     </div>
+                  ))}
+                </section>
 
-                    {r.badge && <div className="recent-badge">{r.badge}</div>}
+                {/* Recent activity */}
+                <section className="recent-section">
+                  <div className="recent-header">
+                    <h2 className="recent-title">Recent Activity</h2>
+                    <a className="view-all">View All</a>
                   </div>
-                ))}
-              </div>
-            </section>
 
-            {/* Footer */}
-            <footer className="footer">
-              © 2024 Backstage. All rights reserved. • Terms of Service • Privacy Policy • Support
-            </footer>
+                  <div className="recent-list">
+                    {recent.map((r, idx) => (
+                      <div key={idx} className="recent-item">
+                        <div className="recent-left">
+                          <div className="recent-icon">📦</div>
+                          <div>
+                            <div className="recent-text">{r.title}</div>
+                            <div className="recent-time">{r.time}</div>
+                          </div>
+                        </div>
+
+                        {r.badge && <div className="recent-badge">{r.badge}</div>}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              </>
+            )}
+
+            {activeTab === "UploadBTS" && <UploadBTS />}
           </main>
         </div>
       </div>
