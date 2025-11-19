@@ -150,11 +150,6 @@ export default function CreatorDashboard() {
 
                 {/* Recent activity */}
                 <section className="recent-section">
-                  <div className="recent-header">
-                    <h2 className="recent-title">Recent Activity</h2>
-                    <a className="view-all">View All</a>
-                  </div>
-
                   <div className="recent-list">
                     {recent.map((r, idx) => (
                       <div key={idx} className="recent-item">
