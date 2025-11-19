@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./landingpage.css";
 import Navbar from "../components/navbar";
+import ConnectWalletButton from "../components/ConnectButton";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const LandingPage: React.FC = () => {
           </p>
 
           <div className="hero-btn">
-            <button className="connect-btn">Connect Wallet</button>
+            <ConnectWalletButton />
 
             <button
               onClick={() => navigate("/marketplace")}

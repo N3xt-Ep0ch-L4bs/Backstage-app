@@ -2,6 +2,7 @@ import { useState } from "react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
+import ConnectWalletButton from "../components/ConnectButton";
 import "./marketplace.css";
 import pic1 from "../assets/pic1.png";
 import pic2 from "../assets/pic2.png";
@@ -61,7 +62,9 @@ const Marketplace: React.FC = () => {
           <a href="">Dashboard</a>
           <a href="">My Content</a>
         </nav>
-        <button className="connect-btn">Connect wallet</button>
+        <div>
+          <ConnectWalletButton />
+        </div>
       </div>
 
       <div className="marketplace-container">

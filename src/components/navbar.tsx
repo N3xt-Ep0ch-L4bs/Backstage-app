@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./components.css";
+import ConnectWalletButton from "./ConnectButton";
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
@@ -18,7 +19,9 @@ const Navbar: React.FC = () => {
         <a href="">Dashboard</a>
       </nav>
 
-      <button className="connect-btn">Connect wallet</button>
+      <div>
+        <ConnectWalletButton />
+      </div>
     </div>
   );
 };
