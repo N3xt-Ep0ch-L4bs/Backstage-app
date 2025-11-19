@@ -16,6 +16,12 @@
 .logo p {
  font-weight: bold;
  font-size: 1.2rem;
+ margin-top: 9px;
+ margin-bottom: 1px;
+}
+
+.logo span {
+  font-size: 0.8rem;
 }
 
 .nav-links a {

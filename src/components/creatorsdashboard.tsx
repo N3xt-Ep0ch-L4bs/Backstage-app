@@ -1,4 +1,5 @@
 import React from "react";
+import Navbar from "./navbar";
 import EarningsIcon from "../assets/earnings.png";
 import ViewsIcon from "../assets/views.png";
 import UploadBTS from "./uploadbts";
@@ -48,20 +49,26 @@ export default function CreatorDashboard() {
   ];
 
   return (
+    <>
+    <div className="dashboard-navbar">
+      <div className="logo">
+        <img src="" alt="logo" />
+          <div>
+           <p>Backstage</p>
+            <span>Creator</span>
+          </div>
+     </div>
+      <nav className="nav-links">
+        <a href="">Dashboard</a>
+      </nav>
+      <button className="connect-btn">Connect wallet</button>
+    </div>
     <div className="dashboard-container">
       <div className="dashboard-inner">
         <div className="layout">
           {/* Sidebar */}
           <aside className="dashboard-sidebar">
-            <div className="sidebar-header">
-              <div className="sidebar-logo">B</div>
-              <div>
-                <h3 className="sidebar-title">Backstage</h3>
-                <p className="sidebar-subtitle">Creator</p>
-              </div>
-            </div>
-
-            <nav className="nav-links">
+            <nav className="nav-link">
               <a
                 className={`nav-item ${activeTab === "Dashboard" ? "active" : ""}`}
                 onClick={() => setActiveTab("Dashboard")}
@@ -88,18 +95,15 @@ export default function CreatorDashboard() {
           </aside>
 
           {/* Main */}
-          <main className="main">
-            <header className="main-header">
+          <main className="dashboard-main">
+            {activeTab === "Dashboard" && (
+              <>
+              <div className="main-header">
               <div>
-                <h1 className="main-title">
-                  {activeTab === "Dashboard" ? "Welcome back" : "Upload BTS Video"}
-                </h1>
+                <h1 className="main-title">Welcome back</h1>
 
                 <p className="main-subtitle">
-                  {activeTab === "Dashboard"
-                    ? "Here’s what’s happening with your content today"
-                    : "Upload your behind-the-scenes footage for your subscribers"}
-                </p>
+                </p>Here’s what’s happening with your content today
               </div>
 
               <div className="header-right">
@@ -111,12 +115,7 @@ export default function CreatorDashboard() {
                 </button>
                 <div className="profile-box">Profile</div>
               </div>
-            </header>
-
-            {/* Main Content Switching */}
-            {activeTab === "Dashboard" && (
-              <>
-                {/* Stats */}
+            </div>
                 <section className="stats-grid">
                   {stats.map((s) => (
                     <div key={s.label} className="stat-card">
@@ -174,5 +173,6 @@ export default function CreatorDashboard() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -54,7 +54,7 @@ const Marketplace: React.FC = () => {
       <div className="market-navbar">
         <div className="logo" onClick={() => navigate("/")}>
           <img src="" alt="logo" />
-          <p>Backstage</p>
+            <p>Backstage</p>
         </div>
         <nav className="nav-links">
           <a href="">Marketplace</a>

@@ -7,6 +7,7 @@
 .upload-steps {
   display: flex;
   justify-content: space-between;
+  gap: 80px;
   margin-bottom: 40px;
 }
 
@@ -14,12 +15,15 @@
   text-align: center;
   flex: 1;
   position: relative;
-  font-size: 14px;
-  color: #888;
+  padding: 20px 20px;
+  border-radius: 50%;
+  background: #222;
+  font-size: 12px;
+  color: #ffffff;
 }
 
 .step.completed {
-  color: #1D4ED8;
+  background: #1D4ED8;
 }
 
 .step:not(:last-child)::after {
@@ -37,11 +41,13 @@
 .upload-title {
   font-size: 28px;
   font-weight: 600;
+  text-align: center;
   margin-bottom: 8px;
 }
 
 .upload-subtitle {
   font-size: 14px;
+  text-align: center;
   color: #aaa;
   margin-bottom: 32px;
 }
@@ -91,4 +97,503 @@
   margin-top: 12px;
   font-size: 12px;
   color: #888;
+}
+
+.upload-container {
+  padding: 30px;
+  color: #fff;
+  background: #0a0a0a;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Steps */
+.upload-steps {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.step {
+  background: #1a1a1a;
+  padding: 12px 18px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 13px;
+  opacity: 0.5;
+  min-width: 110px;
+}
+
+.step.active {
+  border: 1px solid #2563eb;
+  opacity: 1;
+}
+
+.step.completed {
+  background: #2563eb;
+  opacity: 1;
+  color: #fff;
+}
+
+/* Step 1 */
+.upload-title {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.upload-subtitle {
+  margin-top: 8px;
+  opacity: 0.7;
+}
+
+.upload-dropzone {
+  border: 2px dashed #2563eb;
+  background: #111;
+  margin-top: 30px;
+  padding: 40px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.upload-dropzone p {
+  margin-top: 10px;
+}
+
+.browse-btn {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 10px 16px;
+  background: #2563eb;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #fff;
+}
+
+.browse-btn input {
+  display: none;
+}
+
+.supported-formats {
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+/* Step 2 and generic */
+.details-container {
+  margin-top: 25px;
+  flex: 1;
+}
+
+.section-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.muted {
+  color: #bdbdbd;
+}
+
+/* form inputs */
+.input-label {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.text-input,
+.select-input,
+.textarea-input {
+  width: 95%;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+}
+
+.textarea-input {
+  height: 130px;
+  resize: none;
+}
+
+/* Tags */
+.tags-box {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.tag {
+  background: #2563eb;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tag-input {
+  background: transparent;
+  border: none;
+  color: white;
+  flex: 1;
+  outline: none;
+  min-width: 120px;
+}
+
+/* Thumbnail section */
+.thumbnail-options {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.thumbnail-option {
+  padding: 10px 12px;
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.thumbnail-option.selected {
+  border-color: #2563eb;
+  background: #162447;
+}
+
+.thumbnail-upload-box {
+  margin-top: 10px;
+  padding: 15px;
+  background: #111;
+  border-radius: 8px;
+  border: 1px solid #333;
+}
+
+/* Advisory */
+.advisory-box {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.advisory-box label {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Buttons (navigation) */
+.step-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #151515;
+  align-items: center;
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  min-width: 110px;
+  font-weight: 600;
+  border: none;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg,#2563eb,#1b4edb);
+  color: #fff;
+}
+
+.btn.secondary {
+  background: transparent;
+  color: #cfcfcf;
+  border: 1px solid #2b2b2b;
+}
+
+.btn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* === CONTAINER === */
+.pricing-container {
+  color: #fff;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+/* === TITLES === */
+.section-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.section-sub {
+  font-size: 14px;
+  opacity: 0.7;
+  margin-bottom: 25px;
+}
+
+.block {
+  background: #111;
+  border: 1px solid #1f1f1f;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.block-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+/* === PRICING CARDS === */
+.pricing-options {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.pricing-card {
+  flex: 1;
+  min-width: 220px;
+  background: #0c0c0c;
+  border: 1px solid #222;
+  padding: 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.pricing-card:hover {
+  border-color: #3c7bff;
+}
+
+.pricing-card.selected {
+  border-color: #3c7bff;
+  background: #0f1a33;
+}
+
+.pricing-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+/* === PRICE INPUT === */
+.price-input-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #0c0c0c;
+  border: 1px solid #222;
+  padding: 12px 16px;
+  border-radius: 12px;
+  width: 200px;
+}
+
+.price-input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+}
+
+.price-unit {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+/* === ACCESS TABS === */
+.toggle-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.toggle-tabs button {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #0c0c0c;
+  border: 1px solid #222;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.toggle-tabs button:hover {
+  border-color: #3c7bff;
+}
+
+.toggle-tabs .active {
+  background: #0f1a33;
+  border-color: #3c7bff;
+}
+
+/* === DAYS INPUT === */
+.days-input-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #0c0c0c;
+  border: 1px solid #222;
+  padding: 12px 16px;
+  border-radius: 12px;
+  width: 250px;
+}
+
+.days-input-box input {
+  background: transparent;
+  border: none;
+  color: #fff;
+  width: 100%;
+  outline: none;
+}
+
+/* === SCARCITY SECTION === */
+.scarcity-options {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.scarcity-card {
+  flex: 1;
+  min-width: 220px;
+  background: #0c0c0c;
+  border: 1px solid #222;
+  padding: 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.scarcity-card:hover {
+  border-color: #3c7bff;
+}
+
+.scarcity-card.selected {
+  background: #0f1a33;
+  border-color: #3c7bff;
+}
+
+.scarcity-title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.limit-input-box {
+  margin-top: 15px;
+  width: 200px;
+  padding: 12px 16px;
+  background: #0c0c0c;
+  border: 1px solid #222;
+  border-radius: 12px;
+}
+
+.limit-input-box input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+}
+
+/* === SEAL BOX === */
+.seal-box {
+  background: #0c0c0c;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.seal-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.seal-row span {
+  opacity: 0.8;
+}
+
+.select-input,
+.text-input {
+  background: #050505;
+  border: 1px solid #222;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: #fff;
+  outline: none;
+}
+
+.advanced-settings summary {
+  cursor: pointer;
+  margin-top: 10px;
+  opacity: 0.8;
+}
+
+.advanced-box {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.advanced-box select {
+  background: #050505;
+  border: 1px solid #222;
+  padding: 10px;
+  border-radius: 8px;
+  color: #fff;
+}
+
+/* === MARKETPLACE PREVIEW === */
+.preview-card {
+  display: flex;
+  gap: 15px;
+  background: #0c0c0c;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 15px;
+}
+
+.preview-thumb {
+  width: 110px;
+  height: 75px;
+  background: #1b1b1b;
+  border-radius: 10px;
+}
+
+.preview-info {
+  flex: 1;
+}
+
+.preview-desc {
+  opacity: 0.6;
+  margin: 5px 0;
+}
+
+.preview-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #3c7bff;
+  margin-top: 5px;
 }
