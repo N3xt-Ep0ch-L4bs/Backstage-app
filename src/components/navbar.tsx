@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
       <nav className="nav-links">
         <a href="/">Home</a>
         <a href="/marketplace">Marketplace</a>
-        <a href="">Dashboard</a>
+        <a href="/dashboard">Dashboard</a>
       </nav>
 
       <div className="connected-btn">

@@ -79,6 +79,9 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
       </section>
+      <section className="">
+        
+      </section>
     </>
   );
 };

@@ -58,8 +58,8 @@ const Marketplace: React.FC = () => {
             <p>Backstage</p>
         </div>
         <nav className="nav-links">
-          <a href="">Marketplace</a>
-          <a href="">Dashboard</a>
+          <a href="/marketplace">Marketplace</a>
+          <a href="/dashboard">Dashboard</a>
           <a href="">My Content</a>
         </nav>
         <div>
