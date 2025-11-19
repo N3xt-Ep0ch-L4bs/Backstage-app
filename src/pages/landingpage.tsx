@@ -44,7 +44,7 @@ const LandingPage: React.FC = () => {
           <h2>Why Creators Choose Backstage</h2>
           <div className="why-cards">
             <div className="why-card">
-              <img src="" />
+              <img src={TrueLogo} />
               <h4>True Ownership</h4>
               <p>Upload exclusive BTS content directly to Walrus for permanent, decentralized storage. 
                 No platform can take it down or change your terms.</p>
@@ -55,7 +55,7 @@ const LandingPage: React.FC = () => {
               </div>
             </div>
             <div className="why-card">
-              <img src="" />
+              <img src={SealLogo} />
               <h4>SEAL-Protected Access</h4>
               <p>Every purchase creates a unique SEAL access token. Set expiration dates, wallet 
                 bindings, and custom policies. Your buyers get authenticated, secure access.</p>
@@ -66,7 +66,7 @@ const LandingPage: React.FC = () => {
                 </div>
             </div>
             <div className="why-card">
-              <img src="" />
+              <img src={SuiLogo} />
               <h4>Instant Earnings</h4>
               <p>Every purchase creates a unique SEAL access token. Set expiration dates, wallet bindings, 
                 and custom policies. Your buyers get authenticated, secure access.

@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
         <a href="">Dashboard</a>
       </nav>
 
-      <div>
+      <div className="connected-btn">
         <ConnectWalletButton />
       </div>
     </div>

@@ -676,10 +676,10 @@
 }
 
 .reviewPublish-sectionBox {
-  background: #141414;
+  background: #0078FF14;
   padding: 18px;
   border-radius: 12px;
-  border: 1px solid #262626;
+  border: 1px solid #0078FF33
 }
 
 .reviewPublish-sectionBox h4 {
@@ -687,10 +687,10 @@
 }
 
 .reviewPublish-sideBox {
-  background: #141414;
+  background: #2C2C2C99;
   padding: 18px;
+  border: 2px solid #FFD7004D;
   border-radius: 12px;
-  border: 1px solid #262626;
   margin-bottom: 20px;
 }
 

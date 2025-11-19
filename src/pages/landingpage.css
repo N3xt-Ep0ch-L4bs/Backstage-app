@@ -76,6 +76,10 @@
   transition: transform 0.3s ease;
 }
 
+.why-card img {
+  padding: 20px;
+}
+
 .why-card h4 {
   font-size: 1.4rem;
   margin-top: 3px;
@@ -96,6 +100,7 @@ color: ghostwhite;
 
 .why-card li {
   font-size: 0.85rem;
+  color: #0078FF;
 }
 
 .why-card:hover {
