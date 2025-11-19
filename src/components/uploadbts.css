@@ -1,5 +1,4 @@
 .upload-container {
-  padding: 40px;
   color: #fff;
   font-family: "Inter", sans-serif;
 }
@@ -24,18 +23,6 @@
 
 .step.completed {
   background: #1D4ED8;
-}
-
-.step:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -50%;
-  width: 100%;
-  height: 2px;
-  background-color: #555;
-  transform: translateY(-50%);
-  z-index: -1;
 }
 
 .upload-title {
@@ -101,7 +88,7 @@
 }
 
 .upload-container {
-  padding: 30px;
+  padding: 50px 30px;
   color: #fff;
   background: #0a0a0a;
   min-height: 100vh;
