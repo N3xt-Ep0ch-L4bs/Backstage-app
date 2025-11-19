@@ -5,6 +5,7 @@ import SealLogo from "../assets/seal.png";
 import SuiLogo from "../assets/sui.png";
 import "./landingpage.css";
 import Navbar from "../components/navbar";
+import ConnectWalletButton from "../components/ConnectButton";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
@@ -28,7 +29,7 @@ const LandingPage: React.FC = () => {
           </p>
 
           <div className="hero-btn">
-            <button className="connect-btn">Connect Wallet</button>
+            <ConnectWalletButton />
 
             <button
               onClick={() => navigate("/marketplace")}
