@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { CloudUpload, X, PlayCircle, Edit } from "lucide-react";
-import "./UploadBTS.css";
+import "./uploadbts.css";
 
 const UploadBTS: React.FC = () => {
   const [step, setStep] = useState<number>(1);

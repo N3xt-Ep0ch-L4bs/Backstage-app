@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./navbar";
+import ConnectWalletButton from "./ConnectButton";
 import EarningsIcon from "../assets/earnings.png";
 import ViewsIcon from "../assets/views.png";
 import UploadBTS from "./uploadbts";
@@ -61,7 +61,9 @@ export default function CreatorDashboard() {
       <nav className="nav-links">
         <a href="">Dashboard</a>
       </nav>
-      <button className="connect-btn">Connect wallet</button>
+      <div>
+        <ConnectWalletButton />
+      </div>
     </div>
     <div className="dashboard-container">
       <div className="dashboard-inner">
