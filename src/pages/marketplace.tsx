@@ -85,7 +85,6 @@ const Marketplace: React.FC = () => {
               )}
             </div>
 
-            {/* Price Dropdown */}
             <div className="dropdown">
               <button className="dropdown-header" onClick={() => toggle("price")} aria-expanded={open.price}>
                 Price Range
@@ -100,7 +99,6 @@ const Marketplace: React.FC = () => {
               )}
             </div>
 
-            {/* Creator Dropdown */}
             <div className="dropdown">
               <button className="dropdown-header" onClick={() => toggle("creator")} aria-expanded={open.creator}>
                 Creator

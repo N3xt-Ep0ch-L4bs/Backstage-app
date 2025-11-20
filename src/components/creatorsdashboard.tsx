@@ -16,6 +16,7 @@ import {
   CloudUpload,
 } from "lucide-react";
 import "./creatorsdashboard.css";
+import MyContent from "./mycontent";
 
 interface StatItem {
   label: string;
@@ -78,12 +79,12 @@ export default function CreatorDashboard() {
 
               <a
                 className={`nav-item ${activeTab === "UploadBTS" ? "active" : ""}`}
-                onClick={() => setActiveTab("UploadBTS")}
-              >
+                onClick={() => setActiveTab("UploadBTS")}>
                 <CloudUpload size={18} /> Upload BTS Video
               </a>
 
-              <a className="nav-item"><Video size={18} /> My Content</a>
+              <a className={`nav-item ${activeTab === "MyContent" ? "active" : ""}`}
+                onClick={() => setActiveTab("MyContent")}><Video size={18} /> My Content</a>
               <a className="nav-item"><Shield size={18} /> Access Policies</a>
               <a className="nav-item"><ChartArea size={18} /> Analytics</a>
               <a className="nav-item"><UsersRound size={18} /> Subscribers</a>
@@ -169,9 +170,13 @@ export default function CreatorDashboard() {
             )}
 
             {activeTab === "UploadBTS" && <UploadBTS />}
+            
+
           </main>
-        </div>
+          
+        </div>{activeTab === "MyContent" && <MyContent />}
       </div>
+      
     </div>
     </>
   );
