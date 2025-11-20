@@ -890,3 +890,24 @@
 .returnDashboard-btn:hover {
   background: #444;
 }
+
+.upload-progress-container {
+  width: 100%;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.upload-progress-bar {
+  height: 8px;
+  background-color: #3b82f6;
+  transition: width 0.3s ease;
+}
+
+.upload-progress-text {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
