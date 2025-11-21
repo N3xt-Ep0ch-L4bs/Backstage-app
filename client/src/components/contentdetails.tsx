@@ -5,7 +5,8 @@ import "./contentdetails.css";
 import Secure from "../assets/secure.png";
 import Fast from "../assets/fast.png";
 import Safe from "../assets/safe.png";
-import { Play, Check, Download, Lock, Star, Clock, Bell } from "lucide-react";
+import PurchasePopup from "./purchasepopup";
+import { Play, Check, Download, Star, Clock, Bell } from "lucide-react";
 
 
 interface Creator {
@@ -38,14 +39,6 @@ interface CarouselItem {
   thumbnail: string;
 }
 
-declare module "./purchasepopup" {
-  const PurchasePopup: React.FC<PurchasePopupProps>;
-  export default PurchasePopup;
-}
-
-// ======================
-// Dummy Data (Typed)
-// ======================
 
 const dummyData: ContentItem[] = [
   {
@@ -149,10 +142,6 @@ const dumyData: CarouselItem[] = [
   },
 ];
 
-// ======================
-// Main Component
-// ======================
-
 const ContentDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -165,7 +154,6 @@ const ContentDetails: React.FC = () => {
   return (
     <>
       <div className="details-page">
-        {/* LEFT SIDE */}
         <div className="details-left">
           <div className="video-container">
             <img src={Preview} alt="Preview" />
@@ -216,7 +204,6 @@ const ContentDetails: React.FC = () => {
           </div>
         </div>
 
-        {/* RIGHT SIDE */}
         <div className="details-right">
           <div className="price-card">
             <h1>{content.price.sui} Sui</h1>
@@ -283,7 +270,6 @@ const ContentDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* MORE FROM CREATOR */}
       <div className="more-from-creator">
         <h3>More from {content.creator.name}</h3>
         <div className="carousel">
@@ -305,7 +291,6 @@ const ContentDetails: React.FC = () => {
         </div>
       </div>
 
-      {/* POPUP */}
       {showPopup && (
         <PurchasePopup
           content={content}
