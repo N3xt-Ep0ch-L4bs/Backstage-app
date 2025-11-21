@@ -1,8 +1,6 @@
 import React, { useRef } from "react";
 import ConnectWalletButton from "./ConnectButton";
 import "./mylibrary.css";
-import Navbar from "./navbar";
-
 
 const HERO_IMAGE = "/mnt/data/6a48356c-0a66-4145-ba80-0b3fc2337ce1.png";
 
@@ -109,8 +107,9 @@ export default function MyLibrary() {
                 </div>
            </div>
             <nav className="nav-links">
-              <a href="">Dashboard</a>
-              <a href=""></a>
+              <a href="/marketplace">Marketplace</a>
+              <a href="/dashboard">Dashboard</a>
+              <a href="/mylibrary">My Library</a>
             </nav>
             <div>
               <ConnectWalletButton />
@@ -129,7 +128,7 @@ export default function MyLibrary() {
           )}
         </div>
 
-        <section className="stats-row">
+        <section className="stat-row">
           <article className="stat-card">
             <div className="small-label">Watch Time</div>
             <div className="stat-large">87 Hours</div>

@@ -60,7 +60,7 @@ const Marketplace: React.FC = () => {
         <nav className="nav-links">
           <a href="/marketplace">Marketplace</a>
           <a href="/dashboard">Dashboard</a>
-          <a href="">My Content</a>
+          <a href="/mylibrary">My Library</a>
         </nav>
         <div>
           <ConnectWalletButton />

@@ -18,7 +18,7 @@ function App() {
         <Route path="/dashboard" element={<CreatorDashboard />} />
         <Route path="/mycontent" element={<MyContent />} />
         <Route path="/purchasepopup" element={<PurchasePopup />} />
-        <Route path="/mylibary" element={<MyLibrary />} />
+        <Route path="/mylibrary" element={<MyLibrary />} />
       </Routes>
     </Router>
   );

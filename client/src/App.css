@@ -1,0 +1,11 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  transform: scale(0.8);      /* change to the zoom level you want */
+  transform-origin: top left; /* keeps layout aligned */
+  width: 100%;
+  height: 100%;
+}
