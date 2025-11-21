@@ -8,10 +8,7 @@ import SubscribersIcon from "../assets/suscribers.png";
 import {
   Activity,
   Video,
-  Shield,
-  ChartArea,
   UsersRound,
-  Settings,
   Wallet,
   CloudUpload,
 } from "lucide-react";
@@ -88,11 +85,8 @@ export default function CreatorDashboard() {
 
               <a className={`nav-item ${activeTab === "MyContent" ? "active" : ""}`}
                 onClick={() => setActiveTab("MyContent")}><Video size={18} /> My Content</a>
-              <a className="nav-item"><Shield size={18} /> Access Policies</a>
-              <a className="nav-item"><ChartArea size={18} /> Analytics</a>
               <a className="nav-item"><UsersRound size={18} /> Subscribers</a>
               <a className="nav-item"><Wallet size={18} /> Earnings</a>
-              <a className="nav-item"><Settings size={18} /> Settings</a>
             </nav>
 
             <div className="sidebar-footer">© 2024 Backstage</div>
