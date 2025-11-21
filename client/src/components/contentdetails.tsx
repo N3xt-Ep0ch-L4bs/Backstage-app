@@ -1,7 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import Preview from "../assets/preview.png";
-import PurchasePopup from "./purchasepopup";
 import "./contentdetails.css";
 import Secure from "../assets/secure.png";
 import Fast from "../assets/fast.png";
@@ -42,12 +41,6 @@ interface CarouselItem {
   thumbnail: string;
 }
 
-interface PurchasePopupProps {
-  content: ContentItem;
-  onClose: () => void;
-}
-
-// Tell TS what the popup expects (in case purchasepopup.tsx is JS)
 declare module "./purchasepopup" {
   const PurchasePopup: React.FC<PurchasePopupProps>;
   export default PurchasePopup;
