@@ -61,6 +61,7 @@ export default function CreatorDashboard() {
      </div>
       <nav className="nav-links">
         <a href="">Dashboard</a>
+        <a href=""></a>
       </nav>
       <div>
         <ConnectWalletButton />

@@ -1,5 +1,3 @@
-/* MyContent Page Styling */
-
 .mycontent-container {
   background: #000;
   min-width: 130vh;
@@ -246,8 +244,9 @@
 }
 
 .action-buttons button {
-  background: #1a1a1a;
-  border: 1px solid #222;
+  color: #0078FF;
+  border: 1px solid #0078FF;
+  background: #000;
   border-radius: 6px;
   padding: 8px 12px;
   color: white;

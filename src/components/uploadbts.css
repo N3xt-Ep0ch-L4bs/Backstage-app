@@ -732,7 +732,6 @@
 }
 
 .publishSuccess-container .publishSuccess-title {
-  position: sticky;
   top: 0;
   background: inherit;
   padding-top: 4px;

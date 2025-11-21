@@ -283,7 +283,7 @@ interface MyContentDetailsProps {
 
           <div className="panel metric-box">
             <h3>Engagement</h3>
-            <p><Eye size={14}/> Avg Watch Time: 9:45</p>
+            <h4><Eye size={14}/> Avg Watch Time: 9:45</h4>
             <p><Users size={14}/> Unique Users: 342</p>
           </div>
 
