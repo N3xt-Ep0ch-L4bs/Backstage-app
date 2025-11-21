@@ -1,8 +1,10 @@
-// useWalrusUploadRelay.ts
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit';
 import { WalrusFile, type WriteFilesFlow } from '@mysten/walrus';
+import { useNetworkVariable } from '../networkConfig';
+import { encryptWithSeal } from '../lib/seal';
+import { suiClient } from '../lib/walrus';
 
 interface WriteFilesFlowWithEvents extends WriteFilesFlow {
   on(event: 'progress', callback: (progress: number) => void): void;
@@ -12,7 +14,7 @@ import { walrusClient } from '../lib/walrus';
 import { queryKeys } from './queryKeys';
 
 type UploadState = {
-  status: 'idle' | 'encoding' | 'registering' | 'uploading' | 'certifying' | 'completed' | 'error';
+  status: 'idle' | 'encoding' | 'encrypting' | 'registering' | 'uploading' | 'certifying' | 'completed' | 'error';
   progress: number;
   error: string | null;
   result: any;
@@ -38,6 +40,7 @@ export function useWalrusUploadRelay() {
   const currentAccount = useCurrentAccount();
   const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction();
   const queryClient = useQueryClient();
+  const packageId = useNetworkVariable('packageId');
 
   const upload = async ({ file, title, description, category, tags = [], onProgress }: UploadOptions) => {
     if (!currentAccount?.address) {
@@ -47,11 +50,23 @@ export function useWalrusUploadRelay() {
     try {
       setState(prev => ({ ...prev, status: 'encoding', progress: 10 }));
 
-      // Step 1: Encode File
+      // Step 1: Read and encrypt file
+      const fileBuffer = await file.arrayBuffer();
+      const fileData = new Uint8Array(fileBuffer);
+      
+      // Encrypt the file data
+      setState(prev => ({ ...prev, status: 'encrypting' }));
+      const { encryptedData, id: encryptionId } = await encryptWithSeal(
+        suiClient,
+        packageId,
+        fileData
+      );
+
+      // Create WalrusFile with encrypted data
       const files = [
         WalrusFile.from({
-          contents: new Uint8Array(await file.arrayBuffer()),
-          identifier: file.name,
+          contents: encryptedData,
+          identifier: `${file.name}.encrypted`,
           tags: {
             contentType: file.type,
             originalName: file.name,
@@ -59,6 +74,8 @@ export function useWalrusUploadRelay() {
             description,
             ...(category && { category }), // Only include category if it has a value
             tags: tags.join(','),
+            encryptionId,
+            isEncrypted: 'true'
           },
         }),
       ];
