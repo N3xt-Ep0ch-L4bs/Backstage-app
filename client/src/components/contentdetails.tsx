@@ -8,9 +8,6 @@ import Fast from "../assets/fast.png";
 import Safe from "../assets/safe.png";
 import { Play, Check, Download, Lock, Star, Clock, Bell } from "lucide-react";
 
-// ======================
-// Type Definitions
-// ======================
 
 interface Creator {
   name: string;
