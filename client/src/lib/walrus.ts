@@ -11,8 +11,6 @@ export const walrusClient = new WalrusClient({
   uploadRelay: {
     timeout: 600_000,
     host: "https://upload-relay.testnet.walrus.space",
-    sendTip: {
-      max: 1_000,
-    },
+    
   },
 });

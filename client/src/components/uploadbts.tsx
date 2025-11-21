@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { CloudUpload, X, PlayCircle, Edit } from "lucide-react";
 import "./uploadbts.css";
+import { useWalrusUploadRelay } from '../hooks/useWalrusUploadRelay';
 
 const UploadBTS: React.FC = () => {
   const [step, setStep] = useState<number>(1);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+
+  const { upload } = useWalrusUploadRelay();
 
   const [file, setFile] = useState<File | null>(null);
 
@@ -24,7 +28,7 @@ const UploadBTS: React.FC = () => {
       setStep(2);
     }
   };
-  
+
   const [pricingModel, setPricingModel] = useState("ppv");
   const [price, setPrice] = useState("");
 
@@ -75,38 +79,46 @@ const UploadBTS: React.FC = () => {
     if (step > 1) setStep((s) => s - 1);
   };
 
-  const handlePublish = () => {
-    setStep(5);
-  };
-
-    useEffect(() => {
-  if (step === 5) {
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = prev; };
+  const handlePublish = async () => {
+  if (!file) return;
+  
+  try {
+    await upload({
+      file,
+      title,
+      description,
+      category,
+      tags
+    });
+    setStep(5); // Move to success step
+  } catch (error) {
+    console.error('Upload failed:', error);
+    // You might want to show an error message to the user here
+  } finally {
+    setIsUploading(false);
   }
-}, [step]);
+};
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <div className="upload-container">
       {step !== 5 && (
-      <div className="upload-steps">
-        <div className={`step ${step > 1 ? "completed" : step === 1 ? "active" : ""}`}>
-          1<br/><span>Upload File</span>
+        <div className="upload-steps">
+          <div className={`step ${step > 1 ? "completed" : step === 1 ? "active" : ""}`}>
+            1<br /><span>Upload File</span>
+          </div>
+          <div className={`step ${step === 2 ? "active" : step > 2 ? "completed" : ""}`}>
+            2<br /><span>Content Details</span>
+          </div>
+          <div className={`step ${step === 3 ? "active" : step > 3 ? "completed" : ""}`}>
+            3<br /><span>Pricing & Access</span>
+          </div>
+          <div className={`step ${step === 4 ? "active" : ""}`}>
+            4<br /><span>Review & Publish</span>
+          </div>
         </div>
-        <div className={`step ${step === 2 ? "active" : step > 2 ? "completed" : ""}`}>
-          2<br/><span>Content Details</span>
-        </div>
-        <div className={`step ${step === 3 ? "active" : step > 3 ? "completed" : ""}`}>
-          3<br/><span>Pricing & Access</span>
-        </div>
-        <div className={`step ${step === 4 ? "active" : ""}`}>
-          4<br/><span>Review & Publish</span>
-        </div>
-      </div>
-    )}
+      )}
 
       {/* STEP 1 — Upload */}
       {step === 1 && (
@@ -411,164 +423,164 @@ const navigate = useNavigate();
         </div>
       )}
 
-        {step === 4 && (
-          <div className="reviewPublish-container">
-            <h2 className="reviewPublish-title">Review & Publish</h2>
-            <p className="reviewPublish-sub">Double-check all fields before publishing.</p>
+      {step === 4 && (
+        <div className="reviewPublish-container">
+          <h2 className="reviewPublish-title">Review & Publish</h2>
+          <p className="reviewPublish-sub">Double-check all fields before publishing.</p>
 
-            <div className="reviewPublish-grid">
-              
-              <div className="reviewPublish-left">
-                
-                <div className="reviewPublish-videoCard">
-                  <div className="reviewPublish-thumbWrapper">
-                    {customThumbnail ? (
-                      <img
-                        src={URL.createObjectURL(customThumbnail)}
-                        alt="thumbnail"
-                        className="reviewPublish-thumb"
-                      />
-                    ) : (
-                      <div className="reviewPublish-thumbPlaceholder">Auto thumbnail</div>
-                    )}
-                    <PlayCircle size={48} className="reviewPublish-playIcon" />
-                  </div>
+          <div className="reviewPublish-grid">
 
-                  <div className="reviewPublish-videoInfo">
-                    <h3>{title}</h3>
-                    <button className="reviewPublish-editBtn" onClick={() => setStep(2)}>
-                      <Edit size={14} /> Edit Details
-                    </button>
-                  </div>
+            <div className="reviewPublish-left">
+
+              <div className="reviewPublish-videoCard">
+                <div className="reviewPublish-thumbWrapper">
+                  {customThumbnail ? (
+                    <img
+                      src={URL.createObjectURL(customThumbnail)}
+                      alt="thumbnail"
+                      className="reviewPublish-thumb"
+                    />
+                  ) : (
+                    <div className="reviewPublish-thumbPlaceholder">Auto thumbnail</div>
+                  )}
+                  <PlayCircle size={48} className="reviewPublish-playIcon" />
                 </div>
 
-                <div className="reviewPublish-sectionBox">
-                  <h4>Content Details</h4>
-                  <p>{description}</p>
-                  <div><strong>Category:</strong> {category}</div>
-                  <div><strong>Tags:</strong> {tags.join(", ")}</div>
-                  <div><strong>File Name:</strong> {file?.name}</div>
-                  <div><strong>Format:</strong> {file?.type}</div>
-                </div>
-
-              </div>
-
-              <div className="reviewPublish-right">
-                
-                <div className="reviewPublish-sideBox">
-                  <h4>Pricing & Access</h4>
-                  <div className="reviewPublish-row"><span>Price:</span> {price || 0} SUI</div>
-                  <div className="reviewPublish-row"><span>Model:</span> {pricingModel === "ppv" ? "Pay-Per-View" : "Subscription"}</div>
-                  <div className="reviewPublish-row"><span>Access:</span> {accessType === "lifetime" ? "Lifetime" : `${accessDays} Days`}</div>
-                  <div className="reviewPublish-row"><span>Scarcity:</span> {scarcity === "unlimited" ? "Unlimited" : `${limitCount} copies`}</div>
-                </div>
-
-                <div className="reviewPublish-sideBox">
-                  <h4>SEAL Security</h4>
-                  <div className="reviewPublish-row"><span>Proof:</span> {proofType}</div>
-                  <div className="reviewPublish-row"><span>Copy Limit:</span> {copyLimit}</div>
-                  <div className="reviewPublish-row"><span>Key Strength:</span> {keyStrength}</div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        )}
-
-        {step === 5 && (
-  <div className="publishSuccess-overlay">
-    <div className="publishSuccess-container">
-
-          <div className="publishSuccess-icon">
-            <div className="circle">
-              <span className="check">✔</span>
-            </div>
-          </div>
-          <h1 className="publishSuccess-title">Content Published Successfully! 🎉</h1>
-          <p className="publishSuccess-sub">
-            Your behind-the-scenes content is now live on the marketplace.
-          </p>
-          <div className="publishSuccess-infoBox">
-            <div className="info-row">
-              <span>Your content is now available to</span>
-              <strong>50,000+ fans</strong>
-            </div>
-
-            <div className="info-row">
-              <span>Transaction hash</span>
-              <strong>0x7k4n...m9b2</strong>
-            </div>
-
-            <div className="info-row">
-              <span>Published on</span>
-              <strong>{new Date().toLocaleString()}</strong>
-            </div>
-          </div>
-
-          <h2 className="publishSuccess-nextTitle">What's Next?</h2>
-
-          <div className="publishSuccess-nextList">
-
-            <button
-              className="next-item"
-              onClick={() => console.log("Share content")}
-            >
-              <div className="next-left">
-                <div className="next-icon">🔗</div>
-                <div>
-                  <h4>Share Your Content</h4>
-                  <p>Promote your new content to your audience</p>
+                <div className="reviewPublish-videoInfo">
+                  <h3>{title}</h3>
+                  <button className="reviewPublish-editBtn" onClick={() => setStep(2)}>
+                    <Edit size={14} /> Edit Details
+                  </button>
                 </div>
               </div>
-              <div className="next-arrow">→</div>
-            </button>
 
-            <button
-              className="next-item"
-              onClick={() => console.log("View marketplace")}
-            >
-              <div className="next-left">
-                <div className="next-icon">🛒</div>
-                <div>
-                  <h4>View in Marketplace</h4>
-                  <p>See how your content appears to buyers</p>
-                </div>
+              <div className="reviewPublish-sectionBox">
+                <h4>Content Details</h4>
+                <p>{description}</p>
+                <div><strong>Category:</strong> {category}</div>
+                <div><strong>Tags:</strong> {tags.join(", ")}</div>
+                <div><strong>File Name:</strong> {file?.name}</div>
+                <div><strong>Format:</strong> {file?.type}</div>
               </div>
-              <div className="next-arrow">→</div>
-            </button>
 
-            <button
-              className="next-item"
-              onClick={() => console.log("Track performance")}
-            >
-              <div className="next-left">
-                <div className="next-icon">📊</div>
-                <div>
-                  <h4>Track Performance</h4>
-                  <p>Monitor views, sales, and earnings</p>
-                </div>
+            </div>
+
+            <div className="reviewPublish-right">
+
+              <div className="reviewPublish-sideBox">
+                <h4>Pricing & Access</h4>
+                <div className="reviewPublish-row"><span>Price:</span> {price || 0} SUI</div>
+                <div className="reviewPublish-row"><span>Model:</span> {pricingModel === "ppv" ? "Pay-Per-View" : "Subscription"}</div>
+                <div className="reviewPublish-row"><span>Access:</span> {accessType === "lifetime" ? "Lifetime" : `${accessDays} Days`}</div>
+                <div className="reviewPublish-row"><span>Scarcity:</span> {scarcity === "unlimited" ? "Unlimited" : `${limitCount} copies`}</div>
               </div>
-              <div className="next-arrow">→</div>
-            </button>
-          </div>
-          <div className="publishSuccess-buttons">
-            <button className="uploadMore-btn" onClick={() => setStep(1)}>
-              + Upload Another Video
-            </button>
 
-            <button className="returnDashboard-btn" onClick={() => navigate("/dashboard")}>
-              Return to Dashboard
-            </button>
+              <div className="reviewPublish-sideBox">
+                <h4>SEAL Security</h4>
+                <div className="reviewPublish-row"><span>Proof:</span> {proofType}</div>
+                <div className="reviewPublish-row"><span>Copy Limit:</span> {copyLimit}</div>
+                <div className="reviewPublish-row"><span>Key Strength:</span> {keyStrength}</div>
+              </div>
+
+            </div>
           </div>
         </div>
-      </div>
-)}
+      )}
+
+      {step === 5 && (
+        <div className="publishSuccess-overlay">
+          <div className="publishSuccess-container">
+
+            <div className="publishSuccess-icon">
+              <div className="circle">
+                <span className="check">✔</span>
+              </div>
+            </div>
+            <h1 className="publishSuccess-title">Content Published Successfully! 🎉</h1>
+            <p className="publishSuccess-sub">
+              Your behind-the-scenes content is now live on the marketplace.
+            </p>
+            <div className="publishSuccess-infoBox">
+              <div className="info-row">
+                <span>Your content is now available to</span>
+                <strong>50,000+ fans</strong>
+              </div>
+
+              <div className="info-row">
+                <span>Transaction hash</span>
+                <strong>0x7k4n...m9b2</strong>
+              </div>
+
+              <div className="info-row">
+                <span>Published on</span>
+                <strong>{new Date().toLocaleString()}</strong>
+              </div>
+            </div>
+
+            <h2 className="publishSuccess-nextTitle">What's Next?</h2>
+
+            <div className="publishSuccess-nextList">
+
+              <button
+                className="next-item"
+                onClick={() => console.log("Share content")}
+              >
+                <div className="next-left">
+                  <div className="next-icon">🔗</div>
+                  <div>
+                    <h4>Share Your Content</h4>
+                    <p>Promote your new content to your audience</p>
+                  </div>
+                </div>
+                <div className="next-arrow">→</div>
+              </button>
+
+              <button
+                className="next-item"
+                onClick={() => console.log("View marketplace")}
+              >
+                <div className="next-left">
+                  <div className="next-icon">🛒</div>
+                  <div>
+                    <h4>View in Marketplace</h4>
+                    <p>See how your content appears to buyers</p>
+                  </div>
+                </div>
+                <div className="next-arrow">→</div>
+              </button>
+
+              <button
+                className="next-item"
+                onClick={() => console.log("Track performance")}
+              >
+                <div className="next-left">
+                  <div className="next-icon">📊</div>
+                  <div>
+                    <h4>Track Performance</h4>
+                    <p>Monitor views, sales, and earnings</p>
+                  </div>
+                </div>
+                <div className="next-arrow">→</div>
+              </button>
+            </div>
+            <div className="publishSuccess-buttons">
+              <button className="uploadMore-btn" onClick={() => setStep(1)}>
+                + Upload Another Video
+              </button>
+
+              <button className="returnDashboard-btn" onClick={() => navigate("/dashboard")}>
+                Return to Dashboard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {step !== 5 && (
         <div className="step-buttons">
           <button className="btn secondary" onClick={goBack} disabled={step === 1}>Back</button>
-          <button className="btn primary" onClick={step < 4 ? goNext : handlePublish}>
-            {step < 4 ? "Next" : "Publish"}
+          <button className="btn primary" onClick={step < 4 ? goNext : handlePublish} disabled={isUploading}>
+            {step < 4 ? "Next" : isUploading ? "Publishing..." : "Publish"}
           </button>
         </div>
       )}
