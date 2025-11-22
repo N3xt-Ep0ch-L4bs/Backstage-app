@@ -39,6 +39,7 @@ const NavLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, chil
       to={to} 
       className={`nav-link ${isActive ? 'active' : ''}`}
       style={{
+        display: 'flex',
         padding: '0.5rem 1rem',
         textDecoration: 'none',
         color: isActive ? '#2563eb' : '#4b5563',

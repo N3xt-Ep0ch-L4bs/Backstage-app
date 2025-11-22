@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import "./creatorsdashboard.css";
 import MyContent from "./mycontent";
+import Footer from "./footer";
 
 interface StatItem {
   label: string;
@@ -59,7 +60,7 @@ export default function CreatorDashboard() {
       <nav className="nav-links">
         <a href="/marketplace">Marketplace</a>
         <a href="/dashboard">Dashboard</a>
-        <a href="/mylibary">My Library</a>
+        <a href="/mylibrary">My Library</a>
       </nav>
       <div>
         <ConnectWalletButton />
@@ -164,17 +165,15 @@ export default function CreatorDashboard() {
                     ))}
                   </div>
                 </section>
+                
               </>
             )}
 
             {activeTab === "UploadBTS" && <UploadBTS />}
-            
-
           </main>
-          
         </div>{activeTab === "MyContent" && <MyContent />}
       </div>
-      
+      <Footer />
     </div>
     </>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/footer";
 import TrueLogo from "../assets/true.png";
 import SealLogo from "../assets/seal.png";
 import SuiLogo from "../assets/sui.png";
@@ -9,6 +10,115 @@ import ConnectWalletButton from "../components/ConnectButton";
 
 const LandingPage: React.FC = () => {
   const navigate = useNavigate();
+
+  const creators = [
+  {
+    name: "Luna Films",
+    tag: "Documentary Filmmaker",
+    subscribers: "1.9k",
+    videos: 44,
+    rating: 4.8,
+    img: "/assets/creator1.png",
+    cover: "/assets/cover1.png",
+  },
+  {
+    name: "Phoenix Productions",
+    tag: "VFX Artist",
+    subscribers: "850",
+    videos: 32,
+    rating: 4.6,
+    img: "/assets/creator2.png",
+    cover: "/assets/cover2.png",
+  },
+  {
+    name: "Nebula Studios",
+    tag: "Film Studio",
+    subscribers: "2.4k",
+    videos: 67,
+    rating: 4.9,
+    img: "/assets/creator3.png",
+    cover: "/assets/cover3.png",
+  },
+  {
+    name: "Echo Documentaries",
+    tag: "Visual Storyteller",
+    subscribers: "920",
+    videos: 38,
+    rating: 4.7,
+    img: "/assets/creator4.png",
+    cover: "/assets/cover4.png",
+  },
+];
+
+const trending = [
+  {
+    creator: "Luna Films",
+    price: "150 SUI",
+    img: "/assets/tr1.png",
+    title: "The Symphony of Light: Making Of",
+    time: "Released 5 hours ago",
+  },
+  {
+    creator: "Nebula Studios",
+    price: "50 SUI (rental)",
+    img: "/assets/tr2.png",
+    title: "Cosmic Dawn: VFX Breakdown",
+    time: "Released 2 hours ago",
+  },
+  {
+    creator: "Echo Documentaries",
+    price: "75 SUI",
+    img: "/assets/tr3.png",
+    title: "Wilderness Whispers: Director’s Cut",
+    time: "Released 1 day ago",
+  },
+];
+
+const techFeatures = [
+  {
+    icon: "⚡",
+    title: "Lightning-Fast Transactions",
+    desc: "Powered by high-performance smart contracts for instant purchases and efficient creator payouts."
+  },
+  {
+    icon: "🗄️",
+    title: "Permanent Decentralized Storage",
+    desc: "Your content is preserved on a decentralized network, ensuring longevity and tamper-proof delivery without any central failures."
+  },
+  {
+    icon: "🔐",
+    title: "Advanced Access Control",
+    desc: "Blockchain-verified access ensures only paying viewers unlock premium content."
+  }
+];
+
+const testimonials = [
+  {
+    text: "“The transparency and payout model is way better than traditional platforms. I actually feel in control of my work.”",
+    name: "Sarah Cole",
+    role: "Film Creator",
+    img: "/assets/user1.png"
+  },
+  {
+    text: "“My BTS content blew up here. The blockchain access system is shockingly smooth. Totally impressed.”",
+    name: "Marcus Blake",
+    role: "VFX Artist",
+    img: "/assets/user2.png"
+  },
+  {
+    text: "“The best platform for creators who want to protect their work. And the payment system? Instant. I love it.”",
+    name: "Nina Howard",
+    role: "Documentary Producer",
+    img: "/assets/user3.png"
+  }
+];
+
+const stats = [
+  { label: "Active Creators", value: "10,000+" },
+  { label: "BTS Videos", value: "50,000+" },
+  { label: "Creator Earnings", value: "$2.5M+" },
+  { label: "Creator Satisfaction", value: "95%" }
+];
 
   return (
     <>
@@ -79,9 +189,112 @@ const LandingPage: React.FC = () => {
             </div>
           </div>
       </section>
-      <section className="">
-        
+       <section className="creators-section">
+      <h2 className="section-title">Meet Our Top Creators</h2>
+      <p className="section-sub">Industry professionals sharing their creative process</p>
+
+      <div className="creators-grid">
+        {creators.map((c, index) => (
+          <div className="creator-card" key={index}>
+            <img src={c.img} className="creator-avatar" />
+            <h3>{c.name}</h3>
+            <span className="creator-tag">{c.tag}</span>
+
+            <div className="creator-stats">
+              <span>{c.subscribers} Subscribers</span>
+              <span>{c.videos} Videos</span>
+              <span>⭐ {c.rating}</span>
+            </div>
+
+            <img src={c.cover} className="creator-cover" />
+
+            <button className="view-profile">VIEW PROFILE</button>
+          </div>
+        ))}
+      </div>
+    </section>
+    <section className="trending-section">
+      <div className="trending-header">
+        <h2>Trending Behind-the-Scenes</h2>
+        <a className="view-all">View All →</a>
+      </div>
+
+      <div className="trending-grid">
+        {trending.map((t, index) => (
+          <div className="trending-card" key={index}>
+            <img src={t.img} className="trending-img" />
+
+            <div className="card-top">
+              <span className="creator-tag">{t.creator}</span>
+              <span className="price-tag">{t.price}</span>
+            </div>
+
+            <h3>{t.title}</h3>
+            <p>{t.time}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+     <section className="tech-section">
+        <h2 className="section-title">Built on Cutting-Edge Web3 Tech</h2>
+
+        <div className="tech-grid">
+          {techFeatures.map((item, i) => (
+            <div className="tech-card" key={i}>
+              <div className="tech-icon">{item.icon}</div>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </div>
+          ))}
+        </div>
       </section>
+
+      {/* Testimonials */}
+      <section className="testimonial-section">
+        <h2 className="section-title">Loved by Creators Worldwide</h2>
+
+        <div className="testimonial-grid">
+          {testimonials.map((t, i) => (
+            <div className="testimonial-card" key={i}>
+              <p className="testimonial-text">{t.text}</p>
+
+              <div className="testimonial-user">
+                <img src={t.img} className="testimonial-avatar" />
+                <div>
+                  <h4>{t.name}</h4>
+                  <span>{t.role}</span>
+                </div>
+              </div>
+
+              <div className="stars">⭐⭐⭐⭐⭐</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="stats-section">
+        <div className="stats-grid">
+          {stats.map((s, i) => (
+            <div className="stats-card" key={i}>
+              <h3>{s.value}</h3>
+              <p>{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="cta-section">
+        <h2>Ready to Share Your Story?</h2>
+        <p>Join thousands of creators monetizing their behind-the-scenes content.</p>
+
+        <div className="cta-buttons">
+          <button className="btn-primary">START CREATING</button>
+          <button className="btn-secondary">BROWSE MARKETPLACE</button>
+        </div>
+      </section>
+      <Footer />
     </>
   );
 };

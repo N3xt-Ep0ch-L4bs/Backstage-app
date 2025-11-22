@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import ConnectWalletButton from "../components/ConnectButton";
 import "./marketplace.css";
+import Footer from "../components/footer";
 import pic1 from "../assets/pic1.png";
 import pic2 from "../assets/pic2.png";
 import pic3 from "../assets/pic3.png";
@@ -158,8 +159,11 @@ const Marketplace: React.FC = () => {
             <button>3</button>
             <button>{">"}</button>
           </div>
+          <Footer />
         </main>
+        
       </div>
+      
     </>
   );
 };

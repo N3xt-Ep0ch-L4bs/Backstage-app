@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import Footer from "./footer";
 import Preview from "../assets/preview.png";
 import "./contentdetails.css";
 import Secure from "../assets/secure.png";
@@ -297,6 +298,7 @@ const ContentDetails: React.FC = () => {
           onClose={() => setShowPopup(false)}
         />
       )}
+      <Footer />
     </>
   );
 };

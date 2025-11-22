@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import ConnectWalletButton from "./ConnectButton";
+import Footer from "./footer";
 import "./mylibrary.css";
 
 const HERO_IMAGE = "/mnt/data/6a48356c-0a66-4145-ba80-0b3fc2337ce1.png";
@@ -216,7 +217,7 @@ export default function MyLibrary() {
           </div>
         </section>
 
-        <footer className="mylib-footer">© 2025 Backstage • Terms • Privacy • Support</footer>
+        <Footer />
       </main>
     </div>
   );
