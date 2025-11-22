@@ -33,13 +33,12 @@ const Navbar: React.FC = () => {
 const NavLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => {
   const location = useLocation();
   const isActive = location.pathname === to;
-  
+
   return (
-    <Link 
-      to={to} 
+    <Link
+      to={to}
       className={`nav-link ${isActive ? 'active' : ''}`}
       style={{
-        display: 'flex',
         padding: '0.5rem 1rem',
         textDecoration: 'none',
         color: isActive ? '#2563eb' : '#4b5563',

@@ -92,9 +92,10 @@ export default function MyLibrary() {
   const continueRef = useRef<HTMLDivElement | null>(null);
   const newRef = useRef<HTMLDivElement | null>(null);
 
-  const scroll = (ref: React.RefObject<HTMLDivElement>, dir: number) => {
-    if (!ref.current) return;
-    ref.current.scrollBy({ left: dir * 420, behavior: "smooth" });
+  const scroll = (ref: React.RefObject<HTMLDivElement | null>, direction: number) => {
+    const element = ref.current;
+    if (!element) return;
+    element.scrollBy({ left: direction * 420, behavior: "smooth" as ScrollBehavior });
   };
 
   return (

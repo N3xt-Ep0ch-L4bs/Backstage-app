@@ -294,7 +294,14 @@ const ContentDetails: React.FC = () => {
 
       {showPopup && (
         <PurchasePopup
-          content={content}
+          content={{
+            title: content.title,
+            creator: content.creator,
+            price: {
+              ...content.price,
+              paymenttype: content.price.paymenttype || 'SUI' // Provide a default value if paymenttype is undefined
+            }
+          }}
           onClose={() => setShowPopup(false)}
         />
       )}

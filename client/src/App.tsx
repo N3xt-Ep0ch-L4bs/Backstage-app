@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/landingpage";
 import Marketplace from "./pages/marketplace";
@@ -17,11 +16,23 @@ function App() {
         <Route path="/content/:id" element={<ContentDetails />} />
         <Route path="/dashboard" element={<CreatorDashboard />} />
         <Route path="/mycontent" element={<MyContent />} />
-        <Route path="/purchasepopup" element={<PurchasePopup />} />
+        <Route 
+          path="/purchasepopup" 
+          element={
+            <PurchasePopup 
+              content={{
+                title: "Sample Content",
+                creator: { name: "Sample Creator" },
+                price: { sui: 1, usd: 1, paymenttype: "SUI" }
+              }} 
+              onClose={() => {}} 
+            />
+          } 
+        />
         <Route path="/mylibrary" element={<MyLibrary />} />
       </Routes>
     </Router>
   );
-};
+}
 
 export default App;

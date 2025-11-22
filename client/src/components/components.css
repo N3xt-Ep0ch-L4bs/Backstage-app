@@ -1,10 +1,13 @@
 .navbar {
+  position: sticky;
+  top: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 7px 32px;
   background: #1A1A1A66;
-  z-index: 2;
+  backdrop-filter: blur(10px);
+  z-index: 1000;
 }
 
 .logo {

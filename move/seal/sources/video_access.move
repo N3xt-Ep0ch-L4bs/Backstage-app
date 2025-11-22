@@ -1,4 +1,3 @@
-
 /// FLOW SUMMARY
 
 /// 1. Creator calls `create_video_entry()` via wallet/front-end
@@ -23,42 +22,42 @@
 /// - SEAL copy enforcement (prevent over-sharing)
 /// - On-chain ownership of metadata and access control
 
-
-
 module seal::video_access;
 
 use std::string::String;
-use sui::{coin::Coin, clock::Clock, sui::SUI, dynamic_field as df};
 use std::u64;
+use sui::clock::Clock;
+use sui::coin::Coin;
+use sui::dynamic_field as df;
+use sui::sui::SUI;
 
 //=== ERROR CODES ===
 const EInvalidFee: u64 = 0;
 const ENoAccess: u64 = 1;
 const EInvalidCap: u64 = 2;
 
-
 /// Represents a Video uploaded by a creator
 /// Contains metadata, pricing, and scarcity settings
 public struct Video has key {
-    id: UID,               // Unique object ID for the Video
-    creator: address,      // Address of the content creator
-    title: String,         // Title of the video
-    description: String,   // Description / summary of video content
-    category: String,      // Category label (e.g., Documentary, BTS)
-    tags: vector<String>,  // Optional tags for search/filter
-    blob_id: String,       // Identifier pointing to the uploaded file on Walrus
-    price: u64,            // Price in SUI to purchase access
-    ttl: u64,              // Time-to-live (in ms); 0 = lifetime access
-    scarcity: u64,         // Max allowed purchases; 0 = unlimited
+    id: UID, // Unique object ID for the Video
+    creator: address, // Address of the content creator
+    title: String, // Title of the video
+    description: String, // Description / summary of video content
+    category: String, // Category label (e.g., Documentary, BTS)
+    tags: vector<String>, // Optional tags for search/filter
+    blob_id: String, // Identifier pointing to the uploaded file on Walrus
+    price: u64, // Price in SUI to purchase access
+    ttl: u64, // Time-to-live (in ms); 0 = lifetime access
+    scarcity: u64, // Max allowed purchases; 0 = unlimited
 }
 
 /// Represents a user's access to a specific Video
 /// Encapsulates SEAL copy restrictions and time-limited access
 public struct VideoAccess has key {
-    id: UID,               // Unique ID of the access object
-    video_id: ID,          // Associated Video object ID
-    owner: address,        // Address of the user with access
-    created_at: u64,       // Timestamp when access was granted
+    id: UID, // Unique ID of the access object
+    video_id: ID, // Associated Video object ID
+    owner: address, // Address of the user with access
+    created_at: u64, // Timestamp when access was granted
     copies_remaining: u64, // Remaining SEAL-limited copies
 }
 
@@ -80,7 +79,7 @@ public fun create_video(
     price: u64,
     ttl: u64,
     scarcity: u64,
-    ctx: &mut TxContext
+    ctx: &mut TxContext,
 ): VideoCap {
     let video = Video {
         id: object::new(ctx),
@@ -116,22 +115,21 @@ entry fun create_video_entry(
     price: u64,
     ttl: u64,
     scarcity: u64,
-    ctx: &mut TxContext
+    ctx: &mut TxContext,
 ) {
     transfer::transfer(
         create_video(title, description, category, tags, blob_id, price, ttl, scarcity, ctx),
-        ctx.sender()
+        ctx.sender(),
     );
 }
-
 
 /// User purchases access to a video by paying the correct price
 /// Initializes `VideoAccess` with SEAL copy limits and timestamp
 public fun buy_access(
-    price: Coin<SUI>,   // Coin sent by the user
-    video: &Video,      // Reference to the video being purchased
-    clock: &Clock,      // Clock to record purchase timestamp
-    ctx: &mut TxContext
+    price: Coin<SUI>, // Coin sent by the user
+    video: &Video, // Reference to the video being purchased
+    clock: &Clock, // Clock to record purchase timestamp
+    ctx: &mut TxContext,
 ): VideoAccess {
     assert!(price.value() == video.price, EInvalidFee);
     transfer::public_transfer(price, video.creator);
@@ -173,7 +171,6 @@ public fun use_access(access: &mut VideoAccess) {
     access.copies_remaining = access.copies_remaining - 1;
 }
 
-
 /// Updates the `blob_id` of a video (attach uploaded content) using the VideoCap
 /// Only the owner of the VideoCap can call this
 public fun publish_video(video: &mut Video, cap: &VideoCap, blob_id: String) {
@@ -181,4 +178,82 @@ public fun publish_video(video: &mut Video, cap: &VideoCap, blob_id: String) {
     df::add(&mut video.id, blob_id, 0);
 }
 
+//===== Admin Functions =====
 
+/// Update video price (creator only)
+public fun update_price(_cap: &VideoCap, video: &mut Video, new_price: u64) {
+    video.price = new_price;
+}
+
+/// Update video metadata (creator only)
+public fun update_metadata(
+    _cap: &VideoCap,
+    video: &mut Video,
+    new_title: String,
+    new_description: String,
+    new_category: String,
+    new_tags: vector<String>,
+) {
+    video.title = new_title;
+    video.description = new_description;
+    video.category = new_category;
+    video.tags = new_tags;
+}
+/// Delete a video and its access tokens (creator only)
+    public fun delete_video(
+        cap: VideoCap,
+        video: Video,
+    ) {
+        let Video {
+            id,
+        creator:_,
+        title:_,
+        description:_,
+        category:_,
+        tags:_,
+        blob_id:_,
+        price:_,
+        ttl:_,
+        scarcity:_,
+        } = video;
+        object::delete(id);
+
+        let VideoCap{id, video_id:_} = cap;
+        object::delete(id);
+    }
+
+
+/// === SEAL-Style Access Control ===
+/// All allowlisted keys (prefixes) can access a video while TTL and copies remain
+fun approve_internal(id: vector<u8>, access: &VideoAccess, video: &Video, clock: &Clock): bool {
+    if (access.video_id != object::id(video)) {
+        return false
+    };
+    if (video.ttl > 0 && clock.timestamp_ms() > access.created_at + video.ttl) {
+        return false
+    };
+    if (access.copies_remaining == 0) {
+        return false
+    };
+    // Prefix check using video.id for allowlist keys
+    is_prefix(&video.id.to_bytes(), &id)
+}
+
+/// Entry function to perform SEAL approval
+entry fun seal_approve(id: vector<u8>, access: &VideoAccess, video: &Video, clock: &Clock) {
+    assert!(approve_internal(id, access, video, clock), ENoAccess);
+}
+
+fun is_prefix(slice: &vector<u8>, full: &vector<u8>): bool {
+    if (vector::length(slice) > vector::length(full)) {
+        return false
+    };
+    let mut i = 0;
+    while (i < vector::length(slice)) {
+        if (vector::borrow(slice, i) != vector::borrow(full, i)) {
+            return false
+        };
+        i = i + 1;
+    };
+    true
+}
