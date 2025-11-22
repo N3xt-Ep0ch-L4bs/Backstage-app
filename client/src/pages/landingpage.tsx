@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import FastIcon from "../assets/fast.png"
 import Footer from "../components/footer";
 import TrueLogo from "../assets/true.png";
 import SealLogo from "../assets/seal.png";
@@ -18,8 +19,8 @@ const LandingPage: React.FC = () => {
     subscribers: "1.9k",
     videos: 44,
     rating: 4.8,
-    img: "/assets/creator1.png",
-    cover: "/assets/cover1.png",
+    img: "src/assets/pic9 .png",
+    cover: "src/assets/pic13.png",
   },
   {
     name: "Phoenix Productions",
@@ -27,8 +28,8 @@ const LandingPage: React.FC = () => {
     subscribers: "850",
     videos: 32,
     rating: 4.6,
-    img: "/assets/creator2.png",
-    cover: "/assets/cover2.png",
+    img: "src/assets/pic10.png",
+    cover: "src /assets/pic14.png",
   },
   {
     name: "Nebula Studios",
@@ -36,8 +37,8 @@ const LandingPage: React.FC = () => {
     subscribers: "2.4k",
     videos: 67,
     rating: 4.9,
-    img: "/assets/creator3.png",
-    cover: "/assets/cover3.png",
+    img: "src/assets/pic11.png",
+    cover: "src/assets/pic15.png",
   },
   {
     name: "Echo Documentaries",
@@ -45,8 +46,8 @@ const LandingPage: React.FC = () => {
     subscribers: "920",
     videos: 38,
     rating: 4.7,
-    img: "/assets/creator4.png",
-    cover: "/assets/cover4.png",
+    img: "src/assets/pic12.png",
+    cover: "src/assets/pic16.png",
   },
 ];
 
@@ -54,21 +55,21 @@ const trending = [
   {
     creator: "Luna Films",
     price: "150 SUI",
-    img: "/assets/tr1.png",
+    img: "src/assets/pic3.png",
     title: "The Symphony of Light: Making Of",
     time: "Released 5 hours ago",
   },
   {
     creator: "Nebula Studios",
     price: "50 SUI (rental)",
-    img: "/assets/tr2.png",
+    img: "src/assets/pic2.png",
     title: "Cosmic Dawn: VFX Breakdown",
     time: "Released 2 hours ago",
   },
   {
     creator: "Echo Documentaries",
     price: "75 SUI",
-    img: "/assets/tr3.png",
+    img: "src/assets/pic4.png",
     title: "Wilderness Whispers: Director’s Cut",
     time: "Released 1 day ago",
   },
@@ -76,17 +77,17 @@ const trending = [
 
 const techFeatures = [
   {
-    icon: "⚡",
+    img: "src/assets/pic19.png",
     title: "Lightning-Fast Transactions",
     desc: "Powered by high-performance smart contracts for instant purchases and efficient creator payouts."
   },
   {
-    icon: "🗄️",
+    img: "src/assets/pic17.png",
     title: "Permanent Decentralized Storage",
     desc: "Your content is preserved on a decentralized network, ensuring longevity and tamper-proof delivery without any central failures."
   },
   {
-    icon: "🔐",
+    img: "src/assets/pic18.png",
     title: "Advanced Access Control",
     desc: "Blockchain-verified access ensures only paying viewers unlock premium content."
   }
@@ -97,19 +98,19 @@ const testimonials = [
     text: "“The transparency and payout model is way better than traditional platforms. I actually feel in control of my work.”",
     name: "Sarah Cole",
     role: "Film Creator",
-    img: "client/src/assets/Ellipse 9.png"
+    img: "src/assets/Ellipse9.png"
   },
   {
     text: "“My BTS content blew up here. The blockchain access system is shockingly smooth. Totally impressed.”",
     name: "Marcus Blake",
     role: "VFX Artist",
-    img: "client/src/assets/Ellipse 10.png"
+    img: "src/assets/Ellipse10.png"
   },
   {
     text: "“The best platform for creators who want to protect their work. And the payment system? Instant. I love it.”",
     name: "Nina Howard",
     role: "Documentary Producer",
-    img: "client/src/assets/Group (3).png"
+    img: "src/assets/Group(3).png"
   }
 ];
 
@@ -241,7 +242,7 @@ const stats = [
         <div className="tech-grid">
           {techFeatures.map((item, i) => (
             <div className="tech-card" key={i}>
-              <div className="tech-icon">{item.icon}</div>
+              <img className="tech-img" src={item.img} />
               <h3>{item.title}</h3>
               <p>{item.desc}</p>
             </div>
