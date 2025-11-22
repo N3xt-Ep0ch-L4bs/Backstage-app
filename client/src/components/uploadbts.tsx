@@ -64,6 +64,9 @@ const UploadBTS: React.FC = () => {
     if (!file) return;
 
     setIsUploading(true);
+    let uploadSuccess = false;
+    let walrusBlobId = '';
+
     try {
       // 1. Upload file through walrus relay (encrypt happens in the hook)
       const uploadResult = await upload({
@@ -83,8 +86,9 @@ const UploadBTS: React.FC = () => {
       }
 
       const latestFile = uploadResult[uploadResult.length - 1];
-      const walrusBlobId = latestFile.blobId ?? latestFile.blobObject?.blob_id ?? "";
+      walrusBlobId = latestFile.blobId ?? latestFile.blobObject?.blob_id ?? "";
       setBlobId(walrusBlobId);
+      uploadSuccess = true;
 
       // 2. Prepare args for createVideo
       const priceInMist = Math.floor(price * 1_000_000_000); // SUI to MIST

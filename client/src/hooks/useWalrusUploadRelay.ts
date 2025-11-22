@@ -194,13 +194,34 @@ export function useWalrusUploadRelay() {
         throw new Error('Failed to get transaction digest');
       }
 
+      // Get transaction details to extract deletable object ID
+      const txBlock = await suiClient.getTransactionBlock({
+        digest,
+        options: {
+          showEffects: true,
+          showObjectChanges: true,
+        },
+      });
+
+      const objectChanges = txBlock.objectChanges || [];
+      console.log('Object changes:', JSON.stringify(objectChanges, null, 2));
+      const createdChanges = objectChanges.filter((change: any) => change.type === 'created');
+      console.log('Created changes:', JSON.stringify(createdChanges, null, 2));
+      const deletableChange = createdChanges.find((change: any) => 
+        change.objectType && change.objectType.includes('Deletable')
+      );
+      console.log('Deletable change:', deletableChange);
+      if (!deletableChange) {
+        throw new Error('Deletable object not found in transaction');
+      }
+      const deletableBlobObject = (deletableChange as any).objectId;
+
       // 7. Upload file data with timeout
       updateState({ status: 'uploading', progress: 50 });
       onProgress?.(50);
 
       try {
-        // Generate a secure random nonce (kept for potential future use)
-        // @ts-ignore: nonce is kept for potential future use
+        // Generate a secure random nonce for the proxy request
         const nonce = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString();
 
         const timeout = 300000; // 5 minutes timeout
@@ -212,9 +233,36 @@ export function useWalrusUploadRelay() {
           }, timeout);
         });
 
-        // Upload file data with timeout
+        // Manual upload using fetch to include all required query parameters
+        const relayUrl = 'https://upload-relay.testnet.walrus.space/v1/blob-upload-relay';
+        const blobId = await files[0].getIdentifier();
+        if (!blobId) {
+          throw new Error('Failed to generate blob identifier');
+        }
+        const params = new URLSearchParams({
+          blob_id: blobId,
+          deletable_blob_object: deletableBlobObject,
+          encoding_type: 'RS2', // Default encoding type used by Walrus library
+          transaction_id: digest,
+          nonce: nonce,
+        });
+        const fullUrl = `${relayUrl}?${params.toString()}`;
+
+        const uploadPromise = fetch(fullUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/octet-stream',
+          },
+          body: (files[0] as any).contents,
+        }).then(response => {
+          if (!response.ok) {
+            throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+          }
+          return response;
+        });
+
         await Promise.race([
-          flow.upload({ digest, query: { transactionId: digest, nonce } } as any),
+          uploadPromise,
           timeoutPromise
         ]);
 
