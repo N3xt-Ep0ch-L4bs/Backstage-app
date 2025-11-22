@@ -214,7 +214,7 @@ export function useWalrusUploadRelay() {
 
         // Upload file data with timeout
         await Promise.race([
-          flow.upload({ digest }),
+          flow.upload({ digest, query: { transactionId: digest, nonce } } as any),
           timeoutPromise
         ]);
 
