@@ -1,112 +1,76 @@
-import { useState } from 'react';
-import * as Toast from '@radix-ui/react-toast';
-import { Button, Tooltip } from "@radix-ui/themes";
+import React, { useState } from 'react';
 import { useCurrentAccount } from '@mysten/dapp-kit';
-import { useGetWalTokens } from "../hooks/useGetWalTokens";
-import { useWalBalance } from "../hooks/useWalBalance";
+import { useWalBalance } from '../hooks/useWalBalance';
 import { useSuiBalance } from '../hooks/useSuiBalance';
-import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
+import { useGetWalTokens } from '../hooks/useGetWalTokens';
 
-export function WalConversionButton() {
-    const account = useCurrentAccount();
-    const { data: walBalance } = useWalBalance();
-    const { data: suiBalance } = useSuiBalance();
-    const { mutateAsync: convertToWal, isPending } = useGetWalTokens();
-    const [toast, setToast] = useState<{ open: boolean; message: string; isError: boolean }>({
-        open: false,
-        message: '',
-        isError: false
-    });
+export const WalConversionButton: React.FC = () => {
+  const [isConverting, setIsConverting] = useState(false);
+  const currentAccount = useCurrentAccount();
+  const { data: walBalance, refetch: refetchWalBalance } = useWalBalance();
+  const { data: suiBalance } = useSuiBalance();
+  const { mutateAsync: getWalTokens } = useGetWalTokens();
 
-    const handleConvert = async () => {
-        try {
-            await convertToWal();
-            setToast({
-                open: true,
-                message: 'Successfully converted SUI to WAL!',
-                isError: false
-            });
-        } catch (error) {
-            console.error('Conversion failed:', error);
-            setToast({
-                open: true,
-                message: error instanceof Error ? error.message : 'Failed to convert SUI to WAL',
-                isError: true
-            });
-        }
-    };
+  const handleConvert = async () => {
+    if (!currentAccount?.address) {
+      alert('Please connect your wallet first');
+      return;
+    }
 
-    const formatBalance = (balance: string | number | undefined) => {
-        if (!balance) return '0.00';
-        const num = typeof balance === 'string' ? parseFloat(balance) : balance;
-        return num.toFixed(2);
-    };
+    setIsConverting(true);
+    try {
+      await getWalTokens();
+      await refetchWalBalance();
+      alert('Conversion successful!');
+    } catch (error) {
+      console.error('Conversion failed:', error);
+      alert('Conversion failed. Please try again.');
+    } finally {
+      setIsConverting(false);
+    }
+  };
 
-    if (!account) return null;
+  return (
+    <div style={{
+      position: 'fixed',
+      top: '20px',
+      right: '20px',
+      zIndex: 2000,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '4px',
+      alignItems: 'center',
+      backgroundColor: 'rgba(26, 26, 38, 0.9)',
+      backdropFilter: 'blur(10px)',
+      borderRadius: '0.5rem',
+      padding: '0.5rem',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+    }}>
+      <button
+        onClick={handleConvert}
+        disabled={isConverting || !currentAccount}
+        style={{
+          padding: '0.5rem 1rem',
+          backgroundColor: isConverting ? '#9ca3af' : '#2563eb',
+          color: 'white',
+          border: 'none',
+          borderRadius: '0.375rem',
+          cursor: isConverting || !currentAccount ? 'not-allowed' : 'pointer',
+          fontSize: '0.875rem',
+          fontWeight: '500',
+          transition: 'background-color 0.2s',
+          minWidth: '120px'
+        }}
+      >
+        {isConverting ? 'Converting...' : 'Convert SUI → WAL'}
+      </button>
+      <div style={{ fontSize: '0.75rem', color: '#9ca3af', textAlign: 'center' }}>
+        <div>WAL: {walBalance || '0'}</div>
+        <div>SUI: {suiBalance || '0'}</div>
+      </div>
+    </div>
+  );
+};
 
-    return (
-        <Toast.Provider>
-            <div className="flex items-center gap-4" style={{
-                background: 'var(--gray-3)',
-                padding: '8px 16px',
-                borderRadius: '8px',
-                border: '1px solid var(--gray-6)',
-                height: '40px',
-                boxSizing: 'border-box'
-            }}>
-                <Button 
-                    onClick={handleConvert} 
-                    loading={isPending}
-                    disabled={!suiBalance || parseFloat(suiBalance) <= 0}
-                    variant="soft"
-                    size="1"
-                    className="!px-3 !py-1 !text-sm"
-                >
-                    Convert SUI to WAL
-                </Button>
-                
-                <div className="h-5 w-px bg-gray-300"></div>
-                
-                <Tooltip content={`SUI Balance: ${formatBalance(suiBalance)} | WAL Balance: ${formatBalance(walBalance)}`}>
-                    <div className="flex items-center gap-2" style={{ minWidth: '100px' }}>
-                        <div className="flex items-center gap-1 text-sm font-medium" style={{ color: 'var(--gray-12)' }}>
-                            <span>WAL:</span>
-                            <span className="font-mono">{formatBalance(walBalance)}</span>
-                        </div>
-                    </div>
-                </Tooltip>
-            </div>
-
-            <Toast.Root
-                className="bg-white rounded-md shadow-lg p-4 flex items-center gap-3 data-[state=open]:animate-slideIn data-[state=closed]:animate-hide data-[swipe=end]:animate-swipeOut"
-                open={toast.open}
-                onOpenChange={(open) => setToast(prev => ({ ...prev, open }))}
-                style={{
-                    position: 'fixed',
-                    bottom: 20,
-                    right: 20,
-                    zIndex: 1000,
-                    border: '1px solid #e2e8f0',
-                    minWidth: '300px'
-                }}
-            >
-                <div className={`flex-shrink-0 ${toast.isError ? 'text-red-500' : 'text-green-500'}`}>
-                    {toast.isError ? <CrossCircledIcon width={24} height={24} /> : <CheckCircledIcon width={24} height={24} />}
-                </div>
-                <div className="flex-1">
-                    <Toast.Title className="font-medium text-gray-900">
-                        {toast.isError ? 'Error' : 'Success'}
-                    </Toast.Title>
-                    <Toast.Description className="text-sm text-gray-600">
-                        {toast.message}
-                    </Toast.Description>
-                </div>
-                <Toast.Close className="ml-4 text-gray-400 hover:text-gray-500">
-                    <span className="sr-only">Close</span>
-                    <div className="h-5 w-5 flex items-center justify-center">×</div>
-                </Toast.Close>
-            </Toast.Root>
-            <Toast.Viewport />
-        </Toast.Provider >
-    );
-}
+export default WalConversionButton;

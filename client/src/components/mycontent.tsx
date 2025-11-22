@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Footer from "./footer";
 import "./mycontent.css";
 import { Play, Edit, Link, Settings, BarChart, Users, Eye } from "lucide-react";
 

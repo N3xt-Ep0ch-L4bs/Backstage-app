@@ -54,5 +54,42 @@ export function useVideoCreation() {
     return signAndExecuteTransaction({ transaction: tx }, {});
   };
 
-  return { createVideo };
+  const publishVideo = async (
+    videoId: string,
+    capId: string,
+    blobId: string
+  ) => {
+    // Ensure we have enough WAL tokens for gas
+    if (!walBalance || parseFloat(walBalance) < 0.1) { // 0.1 WAL is a safe minimum
+      try {
+        await getWalTokens();
+      } catch (error) {
+        console.error('Failed to get WAL tokens:', error);
+        throw new Error('Insufficient WAL balance for gas and failed to convert SUI to WAL');
+      }
+    }
+    const tx = new Transaction();
+    
+    tx.moveCall({
+      target: `${packageId}::video_access::publish_video`,
+      arguments: [
+        tx.object(videoId),
+        tx.object(capId),
+        tx.pure.string(blobId),
+      ],
+    });
+
+    tx.setGasBudget(10000000);
+
+    return signAndExecuteTransaction({ 
+      transaction: tx 
+    }, {
+      onSuccess: async (result) => {
+        console.log('res', result);
+        // You can add an alert or other UI feedback here if needed
+      },
+    });
+  };
+
+  return { createVideo, publishVideo };
 }

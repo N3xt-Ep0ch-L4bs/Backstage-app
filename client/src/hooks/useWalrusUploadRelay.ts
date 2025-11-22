@@ -1,33 +1,44 @@
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCurrentAccount, useSignAndExecuteTransaction } from '@mysten/dapp-kit';
-import { WalrusFile, type WriteFilesFlow } from '@mysten/walrus';
+import { WalrusFile } from '@mysten/walrus';
 import { useNetworkVariable } from '../networkConfig';
 import { encryptWithSeal } from '../lib/seal';
-import { suiClient } from '../lib/walrus';
+import { suiClient, walrusClient } from '../lib/walrus';
 
-interface WriteFilesFlowWithEvents extends WriteFilesFlow {
-  on(event: 'progress', callback: (progress: number) => void): void;
-  off(event: 'progress', callback: (progress: number) => void): void;
+// Removed unused interface
+
+type UploadStatus = 'idle' | 'encoding' | 'encrypting' | 'registering' | 'uploading' | 'certifying' | 'completed' | 'error';
+
+export type AccessPolicyType = 'wallet' | 'nft' | 'token' | 'public' | 'subscriber';
+
+export interface AccessControlPolicy {
+  type: AccessPolicyType;
+  address: string;
+  minBalance?: number;
 }
-import { walrusClient } from '../lib/walrus';
-import { queryKeys } from './queryKeys';
 
-type UploadState = {
-  status: 'idle' | 'encoding' | 'encrypting' | 'registering' | 'uploading' | 'certifying' | 'completed' | 'error';
+interface UploadState {
+  status: UploadStatus;
   progress: number;
   error: string | null;
   result: any;
-};
+}
 
-type UploadOptions = {
+export interface UploadOptions {
   file: File;
   title: string;
   description: string;
   category?: string;
   tags?: string[];
+  isEncrypted?: boolean;
+  keyStrength?: 128 | 256;
+  accessControl?: {
+    policies: AccessControlPolicy[];
+  };
   onProgress?: (progress: number) => void;
-};
+}
+
 
 export function useWalrusUploadRelay() {
   const [state, setState] = useState<UploadState>({
@@ -42,114 +53,220 @@ export function useWalrusUploadRelay() {
   const queryClient = useQueryClient();
   const packageId = useNetworkVariable('packageId');
 
-  const upload = async ({ file, title, description, category, tags = [], onProgress }: UploadOptions) => {
-    if (!currentAccount?.address) {
-      throw new Error('No wallet connected');
-    }
+
+
+  const updateState = (updates: Partial<UploadState>) => {
+    setState(prev => ({
+      ...prev,
+      ...updates,
+      ...(updates.status === 'error' && updates.error ? { result: null } : {})
+    }));
+  };
+
+  const upload = async (options: UploadOptions) => {
+    const {
+      file,
+      title,
+      description,
+      category,
+      tags = [],
+      isEncrypted = true,
+      keyStrength = 256,
+      accessControl,
+      onProgress
+    } = options;
+    
+    // Reset state at the start of upload
+    updateState({ 
+      status: 'idle', 
+      progress: 0, 
+      error: null, 
+      result: null 
+    });
 
     try {
-      setState(prev => ({ ...prev, status: 'encoding', progress: 10 }));
+      if (!currentAccount?.address) {
+        const error = new Error('No wallet connected');
+        updateState({ status: 'error', error: error.message });
+        throw error;
+      }
+      // 1. Read and prepare file
+      updateState({ status: 'encoding', progress: 10 });
+      onProgress?.(10);
 
-      // Step 1: Read and encrypt file
       const fileBuffer = await file.arrayBuffer();
-      const fileData = new Uint8Array(fileBuffer);
-      
-      // Encrypt the file data
-      setState(prev => ({ ...prev, status: 'encrypting' }));
-      const { encryptedData, id: encryptionId } = await encryptWithSeal(
-        suiClient,
-        packageId,
-        fileData
-      );
+      // Create a new ArrayBuffer to ensure proper typing
+      const buffer = new ArrayBuffer(fileBuffer.byteLength);
+      new Uint8Array(buffer).set(new Uint8Array(fileBuffer));
+      let fileData: Uint8Array<ArrayBuffer> = new Uint8Array(buffer);
+      let encryptionId: string | undefined;
 
-      // Create WalrusFile with encrypted data
+      // 2. Encrypt if enabled
+      if (isEncrypted) {
+        if (!packageId) {
+          const error = new Error('Package ID is undefined');
+          updateState({ status: 'error', error: error.message });
+          throw error;
+        }
+        updateState({ status: 'encrypting', progress: 20 });
+        onProgress?.(20);
+
+        // Ensure we have valid file data and buffer
+        if (!fileData || !fileData.buffer) {
+          const error = new Error('Invalid file data: buffer is undefined');
+          updateState({ status: 'error', error: error.message });
+          throw error;
+        }
+
+        // Handle different buffer types safely
+        let uploadBuffer: ArrayBuffer;
+        try {
+          if (typeof SharedArrayBuffer !== 'undefined' && fileData.buffer instanceof SharedArrayBuffer) {
+            // Create a new ArrayBuffer copy from SharedArrayBuffer
+            const copy = new Uint8Array(fileData.length);
+            copy.set(fileData);
+            uploadBuffer = copy.buffer;
+          } else {
+            // Use the buffer directly if it's a regular ArrayBuffer
+            uploadBuffer = fileData.buffer.slice(0); // Create a copy to avoid sharing the buffer
+          }
+        } catch (bufferError) {
+          const error = new Error(`Failed to prepare file buffer: ${bufferError}`);
+          updateState({ status: 'error', error: error.message });
+          throw error;
+        }
+
+        const encryptionResult = await encryptWithSeal(
+          suiClient,
+          packageId,
+          // Create a new Uint8Array with the buffer
+          new Uint8Array(uploadBuffer)
+        );
+
+        fileData = encryptionResult.encryptedData as Uint8Array<ArrayBuffer>;
+        encryptionId = encryptionResult.id;
+      }
+
+      // 3. Prepare metadata
+      const metadata: Record<string, string> = {
+        title,
+        description,
+        ...(category && { category }),
+        tags: tags.join(','),
+        isEncrypted: String(isEncrypted),
+        keyStrength: String(keyStrength),
+        ...(isEncrypted && encryptionId && { encryptionId }),
+        ...(accessControl?.policies?.length && { 
+          accessControl: JSON.stringify(accessControl.policies) 
+        })
+      };
+
+      // 4. Create WalrusFile with metadata
       const files = [
         WalrusFile.from({
-          contents: encryptedData,
-          identifier: `${file.name}.encrypted`,
+          contents: fileData,
+          identifier: isEncrypted ? `${file.name}.encrypted` : file.name,
           tags: {
-            contentType: file.type,
+            ...metadata,
             originalName: file.name,
-            title,
-            description,
-            ...(category && { category }), // Only include category if it has a value
-            tags: tags.join(','),
-            encryptionId,
-            isEncrypted: 'true'
+            contentType: file.type
           },
         }),
       ];
 
+      // 5. Initialize upload flow
       const flow = walrusClient.writeFilesFlow({ files });
       await flow.encode();
-      setState(prev => ({ ...prev, progress: 30 }));
+      updateState({ progress: 30 });
 
-      // Step 2: Register the file
-      setState(prev => ({ ...prev, status: 'registering', progress: 20 }));
+      // 6. Register file on-chain
+      updateState({ status: 'registering', progress: 40 });
       const registrationResult = await signAndExecuteTransaction({
         transaction: flow.register({
-          epochs: 30, // Default to 30 days
+          epochs: 30, // 30 days default
           deletable: true,
           owner: currentAccount.address,
         }),
       });
 
-      // Get the digest from the registration result
       const digest = registrationResult.digest;
       if (!digest) {
-        throw new Error('Failed to get digest from registration');
+        throw new Error('Failed to get transaction digest');
       }
 
-      // Step 3: Upload to Relay
-      setState(prev => ({ ...prev, status: 'uploading', progress: 50 }));
-      
-      // Set up progress event listener
-      const handleProgress = (progress: number) => {
-        // Map progress from 50-90% during upload
-        const mappedProgress = 50 + (progress * 0.4);
-        const roundedProgress = Math.round(mappedProgress);
-        setState(prev => ({ ...prev, progress: roundedProgress }));
-        onProgress?.(roundedProgress);
-      };
-      
-      (flow as WriteFilesFlowWithEvents).on('progress', handleProgress);
-      
+      // 7. Upload file data with timeout
+      updateState({ status: 'uploading', progress: 50 });
+      onProgress?.(50);
+
       try {
-        await flow.upload({ digest });
-      } finally {
-        // Clean up the event listener
-        (flow as WriteFilesFlowWithEvents).off('progress', handleProgress);
+        // Generate a secure random nonce (kept for potential future use)
+        // @ts-ignore: nonce is kept for potential future use
+        const nonce = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString();
+
+        const timeout = 300000; // 5 minutes timeout
+
+        // Create timeout promise
+        const timeoutPromise = new Promise<never>((_, reject) => {
+          setTimeout(() => {
+            reject(new Error(`Upload timed out after ${timeout/1000} seconds`));
+          }, timeout);
+        });
+
+        // Upload file data with timeout
+        await Promise.race([
+          flow.upload({ digest, query: { transactionId: digest, nonce } } as any),
+          timeoutPromise
+        ]);
+
+        updateState({ progress: 90 });
+        onProgress?.(90);
+      } catch (error) {
+        console.error('Upload failed:', error);
+
+        // Handle timeout specifically
+        if (error instanceof Error && error.message.includes('timed out')) {
+          const timeoutError = new Error(`Upload timed out after ${300000 / 1000} seconds. Please check your internet connection and try again.`);
+          timeoutError.name = 'UploadTimeoutError';
+          throw timeoutError;
+        }
+        throw error;
       }
 
-      // Step 4: Certify
-      setState(prev => ({ ...prev, status: 'certifying', progress: 95 }));
+      // 8. Finalize with certification
+      updateState({ status: 'certifying', progress: 95 });
       await signAndExecuteTransaction({
         transaction: flow.certify(),
       });
 
-      // Get final result
+      // 9. Get final result
       const result = await flow.listFiles();
       
-      // Invalidate relevant queries
-      queryClient.invalidateQueries({ queryKey: queryKeys.walBalance(currentAccount.address) });
-      queryClient.invalidateQueries({ queryKey: queryKeys.suiBalance(currentAccount.address) });
+      // 10. Update cache
+      queryClient.invalidateQueries({ 
+        queryKey: ['walrusFiles', currentAccount.address] 
+      });
 
-      setState({
+      updateState({
         status: 'completed',
         progress: 100,
-        error: null,
         result,
       });
 
       return result;
+
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      setState(prev => ({
-        ...prev,
-        status: 'error',
+      const errorMessage = error instanceof Error ? error.message : 'Upload failed';
+      console.error('Upload error:', error);
+      updateState({ 
+        status: 'error', 
         error: errorMessage,
-      }));
-      throw error;
+        progress: 0
+      });
+      // Rethrow with more context
+      const enhancedError = new Error(`Upload failed: ${errorMessage}`);
+      enhancedError.name = error instanceof Error ? error.name : 'UploadError';
+      enhancedError.stack = error instanceof Error ? error.stack : undefined;
+      throw enhancedError;
     }
   };
 
