@@ -31,6 +31,7 @@
 .hero p {
   color: #E0E0E0;
   text-align: center;
+  font-size: 1rem;
 }
 
 .hero-btn {
@@ -307,12 +308,10 @@ p {
   font-size: 32px;
 }
 
-
-/* ---------------- TESTIMONIALS ---------------- */
-
 .testimonial-section {
   padding: 80px 0;
   text-align: center;
+  background: #000;
 }
 
 .testimonial-grid {
@@ -439,3 +438,48 @@ p {
 .btn-secondary:hover {
   background: rgba(255, 255, 255, 0.1);
 }
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInSlow {
+  0% {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 0px rgba(0, 120, 255, 0.1); }
+  50% { box-shadow: 0 0 12px rgba(0, 120, 255, 0.25); }
+  100% { box-shadow: 0 0 0px rgba(0, 120, 255, 0.1); }
+}
+
+.reveal {
+  opacity: 0;
+  animation: fadeUp 0.9s ease forwards;
+}
+
+.reveal-slow {
+  opacity: 0;
+  animation: fadeInSlow 1.3s ease forwards;
+}
+

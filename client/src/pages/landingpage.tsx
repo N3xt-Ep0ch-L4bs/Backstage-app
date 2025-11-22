@@ -97,19 +97,19 @@ const testimonials = [
     text: "“The transparency and payout model is way better than traditional platforms. I actually feel in control of my work.”",
     name: "Sarah Cole",
     role: "Film Creator",
-    img: "/assets/user1.png"
+    img: "client/src/assets/Ellipse 9.png"
   },
   {
     text: "“My BTS content blew up here. The blockchain access system is shockingly smooth. Totally impressed.”",
     name: "Marcus Blake",
     role: "VFX Artist",
-    img: "/assets/user2.png"
+    img: "client/src/assets/Ellipse 10.png"
   },
   {
     text: "“The best platform for creators who want to protect their work. And the payment system? Instant. I love it.”",
     name: "Nina Howard",
     role: "Documentary Producer",
-    img: "/assets/user3.png"
+    img: "client/src/assets/Group (3).png"
   }
 ];
 
@@ -290,8 +290,8 @@ const stats = [
         <p>Join thousands of creators monetizing their behind-the-scenes content.</p>
 
         <div className="cta-buttons">
-          <button className="btn-primary">START CREATING</button>
-          <button className="btn-secondary">BROWSE MARKETPLACE</button>
+          <button className="btn-primary" onClick={() => navigate("/dashboard")}>START CREATING</button>
+          <button className="btn-secondary" onClick={() => navigate("/marketplace")}>BROWSE MARKETPLACE</button>
         </div>
       </section>
       <Footer />

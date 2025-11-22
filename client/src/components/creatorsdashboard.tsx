@@ -93,8 +93,7 @@ export default function CreatorDashboard() {
 
             <div className="sidebar-footer">© 2024 Backstage</div>
           </aside>
-
-          {/* Main */}
+          
           <main className="dashboard-main">
             {activeTab === "Dashboard" && (
               <>
@@ -147,7 +146,6 @@ export default function CreatorDashboard() {
                   ))}
                 </section>
 
-                {/* Recent activity */}
                 <section className="recent-section">
                   <div className="recent-list">
                     {recent.map((r, idx) => (
