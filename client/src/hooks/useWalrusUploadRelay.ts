@@ -161,7 +161,7 @@ export function useWalrusUploadRelay() {
         })
       };
 
-      // 4. Create WalrusFile with metadata
+      // 4. Create WalrusFile with metadata and store the file data separately
       const files = [
         WalrusFile.from({
           contents: fileData,
@@ -173,6 +173,9 @@ export function useWalrusUploadRelay() {
           },
         }),
       ];
+
+      // Store the file data separately since we can't reliably access it from WalrusFile
+      const fileContent = fileData;
 
       // 5. Initialize upload flow
       const flow = walrusClient.writeFilesFlow({ files });
@@ -207,14 +210,17 @@ export function useWalrusUploadRelay() {
       console.log('Object changes:', JSON.stringify(objectChanges, null, 2));
       const createdChanges = objectChanges.filter((change: any) => change.type === 'created');
       console.log('Created changes:', JSON.stringify(createdChanges, null, 2));
-      const deletableChange = createdChanges.find((change: any) => 
-        change.objectType && change.objectType.includes('Deletable')
+      
+      // Look for the Blob object in the created changes
+      const blobChange = createdChanges.find((change: any) => 
+        change.objectType && change.objectType.includes('blob::Blob')
       );
-      console.log('Deletable change:', deletableChange);
-      if (!deletableChange) {
-        throw new Error('Deletable object not found in transaction');
+      console.log('Blob change:', blobChange);
+      
+      if (!blobChange) {
+        throw new Error('Blob object not found in transaction');
       }
-      const deletableBlobObject = (deletableChange as any).objectId;
+      const deletableBlobObject = (blobChange as any).objectId;
 
       // 7. Upload file data with timeout
       updateState({ status: 'uploading', progress: 50 });
@@ -239,24 +245,37 @@ export function useWalrusUploadRelay() {
         if (!blobId) {
           throw new Error('Failed to generate blob identifier');
         }
-        const params = new URLSearchParams({
-          blob_id: blobId,
-          deletable_blob_object: deletableBlobObject,
-          encoding_type: 'RS2', // Default encoding type used by Walrus library
-          transaction_id: digest,
-          nonce: nonce,
-        });
-        const fullUrl = `${relayUrl}?${params.toString()}`;
+        
+        // Encode each parameter separately to ensure proper URL encoding
+        const params = [
+          `blob_id=${encodeURIComponent(blobId)}`,
+          `deletable_blob_object=${encodeURIComponent(deletableBlobObject)}`,
+          'encoding_type=RS2',
+          `transaction_id=${encodeURIComponent(digest)}`,
+          `nonce=${encodeURIComponent(nonce)}`
+        ].join('&');
+        
+        const fullUrl = `${relayUrl}?${params}`;
+
+        // Use the file content we stored earlier
+        if (!fileContent) {
+          throw new Error('No file data available for upload');
+        }
+
+        // Create a Blob from the Uint8Array
+        const blob = new Blob([fileContent], { type: 'application/octet-stream' });
 
         const uploadPromise = fetch(fullUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/octet-stream',
           },
-          body: (files[0] as any).contents,
-        }).then(response => {
+          body: blob,
+        }).then(async response => {
           if (!response.ok) {
-            throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            console.error('Upload error details:', errorText);
+            throw new Error(`Upload failed: ${response.status} ${response.statusText}: ${errorText}`);
           }
           return response;
         });
