@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Footer from "./footer";
 import Preview from "../assets/preview.png";
 import "./contentdetails.css";
@@ -152,9 +152,17 @@ const ContentDetails: React.FC = () => {
 
   if (!content) return <p>Content not found!</p>;
 
+  const navigate = useNavigate();
+
   return (
     <>
-      <div className="details-page">
+    <div className="details-page">
+      <div className="back-btn-container">
+          <button className="back-btn" onClick={() => navigate(-1)}>
+            ← Back
+          </button>
+        </div>
+      <div className="details-div">       
         <div className="details-left">
           <div className="video-container">
             <img src={Preview} alt="Preview" />
@@ -282,7 +290,9 @@ const ContentDetails: React.FC = () => {
             )
             .map((item) => (
               <div key={item.id} className="carousel-card">
-                <img src={item.thumbnail} alt={item.title} />
+                <div className="thumbnail-wrapper">
+                  <img src={item.thumbnail} alt={item.title} />
+                </div>
                 <h4>{item.title}</h4>
                 <p className="price">
                   {item.price.sui} Sui / {item.price.usd} USD
@@ -291,6 +301,7 @@ const ContentDetails: React.FC = () => {
             ))}
         </div>
       </div>
+
 
       {showPopup && (
         <PurchasePopup
@@ -306,6 +317,7 @@ const ContentDetails: React.FC = () => {
         />
       )}
       <Footer />
+      </div>
     </>
   );
 };

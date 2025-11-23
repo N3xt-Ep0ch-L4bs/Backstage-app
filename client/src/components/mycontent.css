@@ -291,6 +291,23 @@
   border: 1px solid #222;
 }
 
+.panel div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel p {
+  font-size: 0.9rem;
+}
+
+.network-row span {
+  background: #4ADE8026;
+  color: #4ADE80;
+  padding: 3px 5px;
+  border-radius: 10px;
+}
+
 .panel h3 {
   margin: 0 0 10px 0;
   font-size: 16px;
@@ -300,6 +317,13 @@
 .description {
   font-size: 14px;
   opacity: 0.8;
+}
+
+.view-btn {
+  color: #0078FF;
+  border: none;
+  background: none;
+  font-size: 1rem;
 }
 
 .metric-box {
@@ -334,4 +358,87 @@
   .video-banner {
     height: 200px;
   }
+}
+
+.circle-progress-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 10px auto;
+}
+
+.circle-bg {
+  stroke: #2a2a2a;
+  opacity: 0.4;
+}
+
+.circle-fill {
+  stroke: #0078FF;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.circle-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #fff;
+}
+
+.circle-center strong {
+  font-size: 18px;
+  display: block;
+}
+
+.circle-center p {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.recent-activity ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.04);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: 0.25s ease;
+  gap: 10px;
+  position: relative;
+}
+
+.activity-item:hover {
+  background: rgba(255,255,255,0.07);
+  transform: translateY(-2px);
+}
+
+.activity-item .dot {
+  height: 10px;
+  width: 10px;
+  background: #4ade80; /* green */
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.activity-item p {
+  flex-grow: 1;
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+.activity-item .time {
+  font-size: 12px;
+  opacity: 0.6;
 }

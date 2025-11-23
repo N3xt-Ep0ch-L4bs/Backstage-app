@@ -1,11 +1,37 @@
 .details-page {
   display: flex;
+  flex-direction: column;
+  background: #0a0a0a;
+}
+
+.details-div {
+  display: flex;
   gap: 25px;
   padding: 30px;
   background: #0a0a0a;
   color: #fff;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
+}
+
+.back-btn-container {
+  padding: 10px 30px;
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid #0078FF;
+  color: #0078FF;
+  padding: 7px 34px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 17px;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.6);
 }
 
 .details-left {
@@ -327,11 +353,13 @@
 }
 
 .more-from-creator {
-  margin-top: 40px;
+  padding-top: 40px;
+  padding: 20px;
+  background: #0a0a0a;
 }
 
 .more-from-creator h3 {
-  font-size: 20px;
+  font-size: 18px;
   margin-bottom: 15px;
   color: #fff;
 }
@@ -340,7 +368,9 @@
   display: flex;
   gap: 15px;
   overflow-x: auto;
-  padding-bottom: 10px;
+  padding-bottom: 5px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
 }
 
 .carousel::-webkit-scrollbar {
@@ -348,41 +378,52 @@
 }
 
 .carousel::-webkit-scrollbar-thumb {
-  background: #1e90ff;
+  background: rgba(255,255,255,0.2);
   border-radius: 3px;
 }
 
 .carousel-card {
-  min-width: 200px;
-  background: #121212;
-  border: 1px solid #222;
-  border-radius: 10px;
-  padding: 12px;
+  min-width: 160px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 10px;
   flex-shrink: 0;
-  transition: transform 0.2s;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
 }
 
 .carousel-card:hover {
-  transform: scale(1.05);
-  border-color: #1e90ff;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.carousel-card .thumbnail-wrapper {
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 8px;
 }
 
 .carousel-card img {
   width: 100%;
-  height: 120px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+.carousel-card:hover img {
+  transform: scale(1.05);
 }
 
 .carousel-card h4 {
   font-size: 14px;
-  margin: 0 0 5px;
+  margin: 0;
   color: #fff;
+  margin-bottom: 4px;
 }
 
 .carousel-card .price {
-  font-size: 13px;
-  color: #bbb;
+  font-size: 12px;
+  color: #a1a1aa;
 }
