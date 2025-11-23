@@ -123,34 +123,24 @@ const stats = [
 
   return (
     <>
-      <section className="hero">
+      <section className="hero fade-in">
         <Navbar />
         <div className="hero-content">
-          <h1>Backstage - Own the Story Behind the Scenes.</h1>
-
-          <p>
-            The world's first Marketplace for exclusive behind-the-scenes
-            content. Powered by Sui blockchain, Secured by SEAL, stored forever
-            on Walrus.
+          <h1 className="fade-in" style={{ animationDelay: "0.5s" }}>
+            Backstage - Own the Story Behind the Scenes.
+          </h1>
+          <p className="fade-in" style={{ animationDelay: "0.8s" }}>
+            The world's first Marketplace for exclusive behind-the-scenes content...
           </p>
-
-          <p>
-            10,000+ Creators <span>•</span> 50,000+ BTS Videos <span>•</span>{" "}
-            $2.5M+ Earned
-          </p>
-
-          <div className="hero-btn">
+          <div className="hero-btn fade-in" style={{ animationDelay: "1.1s" }}>
             <ConnectWalletButton />
-
-            <button
-              onClick={() => navigate("/marketplace")}
-              className="explore-btn"
-            >
+            <button onClick={() => navigate("/marketplace")} className="explore-btn">
               Explore Marketplace
             </button>
           </div>
         </div>
       </section>
+
       <section className="why">
           <h2>Why Creators Choose Backstage</h2>
           <div className="why-cards">

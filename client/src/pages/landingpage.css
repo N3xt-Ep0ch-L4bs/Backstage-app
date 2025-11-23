@@ -23,7 +23,7 @@
 }
 
 .hero h1 {
-  font-size: 3.9rem;
+  font-size: 4rem;
   font-weight: 600;
   text-align: center;
 }
@@ -31,7 +31,7 @@
 .hero p {
   color: #E0E0E0;
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 .hero-btn {
@@ -479,3 +479,44 @@ p {
   animation: fadeInSlow 1.3s ease forwards;
 }
 
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards;
+  animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.creator-card,
+.trending-card,
+.tech-card,
+.testimonial-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.creator-card:hover,
+.trending-card:hover,
+.tech-card:hover,
+.testimonial-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+}
+
+.hero-content p span {
+  display: inline-block;
+  animation: popIn 0.5s forwards;
+  transform: scale(0);
+  margin: 0 4px;
+}
+
+@keyframes popIn {
+  to {
+    transform: scale(1);
+  }
+}
