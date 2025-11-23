@@ -161,7 +161,7 @@ export function useWalrusUploadRelay() {
         })
       };
 
-      // 4. Create WalrusFile with metadata
+      // 4. Create WalrusFile with metadata and store the file data separately
       const files = [
         WalrusFile.from({
           contents: fileData,
@@ -173,6 +173,9 @@ export function useWalrusUploadRelay() {
           },
         }),
       ];
+
+      // Store the file data separately since we can't reliably access it from WalrusFile
+      const fileContent = fileData;
 
       // 5. Initialize upload flow
       const flow = walrusClient.writeFilesFlow({ files });
@@ -194,13 +197,37 @@ export function useWalrusUploadRelay() {
         throw new Error('Failed to get transaction digest');
       }
 
+      // Get transaction details to extract deletable object ID
+      const txBlock = await suiClient.getTransactionBlock({
+        digest,
+        options: {
+          showEffects: true,
+          showObjectChanges: true,
+        },
+      });
+
+      const objectChanges = txBlock.objectChanges || [];
+      console.log('Object changes:', JSON.stringify(objectChanges, null, 2));
+      const createdChanges = objectChanges.filter((change: any) => change.type === 'created');
+      console.log('Created changes:', JSON.stringify(createdChanges, null, 2));
+      
+      // Look for the Blob object in the created changes
+      const blobChange = createdChanges.find((change: any) => 
+        change.objectType && change.objectType.includes('blob::Blob')
+      );
+      console.log('Blob change:', blobChange);
+      
+      if (!blobChange) {
+        throw new Error('Blob object not found in transaction');
+      }
+      const deletableBlobObject = (blobChange as any).objectId;
+
       // 7. Upload file data with timeout
       updateState({ status: 'uploading', progress: 50 });
       onProgress?.(50);
 
       try {
-        // Generate a secure random nonce (kept for potential future use)
-        // @ts-ignore: nonce is kept for potential future use
+        // Generate a secure random nonce for the proxy request
         const nonce = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER).toString();
 
         const timeout = 300000; // 5 minutes timeout
@@ -212,9 +239,49 @@ export function useWalrusUploadRelay() {
           }, timeout);
         });
 
-        // Upload file data with timeout
+        // Manual upload using fetch to include all required query parameters
+        const relayUrl = 'https://upload-relay.testnet.walrus.space/v1/blob-upload-relay';
+        const blobId = await files[0].getIdentifier();
+        if (!blobId) {
+          throw new Error('Failed to generate blob identifier');
+        }
+        
+        // Encode each parameter separately to ensure proper URL encoding
+        const params = [
+          `blob_id=${encodeURIComponent(blobId)}`,
+          `deletable_blob_object=${encodeURIComponent(deletableBlobObject)}`,
+          'encoding_type=RS2',
+          `transaction_id=${encodeURIComponent(digest)}`,
+          `nonce=${encodeURIComponent(nonce)}`
+        ].join('&');
+        
+        const fullUrl = `${relayUrl}?${params}`;
+
+        // Use the file content we stored earlier
+        if (!fileContent) {
+          throw new Error('No file data available for upload');
+        }
+
+        // Create a Blob from the Uint8Array
+        const blob = new Blob([fileContent], { type: 'application/octet-stream' });
+
+        const uploadPromise = fetch(fullUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/octet-stream',
+          },
+          body: blob,
+        }).then(async response => {
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Upload error details:', errorText);
+            throw new Error(`Upload failed: ${response.status} ${response.statusText}: ${errorText}`);
+          }
+          return response;
+        });
+
         await Promise.race([
-          flow.upload({ digest, query: { transactionId: digest, nonce } } as any),
+          uploadPromise,
           timeoutPromise
         ]);
 
