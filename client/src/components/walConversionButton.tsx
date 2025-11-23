@@ -52,7 +52,7 @@ export const WalConversionButton: React.FC = () => {
         disabled={isConverting || !currentAccount}
         style={{
           padding: '0.5rem 1rem',
-          backgroundColor: isConverting ? '#9ca3af' : '#2563eb',
+          backgroundColor: isConverting ? '#9ca3af' : '#FFD700',
           color: 'white',
           border: 'none',
           borderRadius: '0.375rem',

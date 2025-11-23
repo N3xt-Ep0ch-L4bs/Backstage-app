@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 import ConnectWalletButton from "./ConnectButton";
+import { Link, useLocation, } from "react-router-dom";
 import Footer from "./footer";
 import "./mylibrary.css";
-
-const HERO_IMAGE = "/mnt/data/6a48356c-0a66-4145-ba80-0b3fc2337ce1.png";
+import { WalConversionButton } from "./walConversionButton";
 
 type VideoItem = {
   id: number;
@@ -98,6 +98,9 @@ export default function MyLibrary() {
     element.scrollBy({ left: direction * 420, behavior: "smooth" as ScrollBehavior });
   };
 
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <div className="mylib-root">
       <div className="dashboard-navbar">
@@ -109,12 +112,30 @@ export default function MyLibrary() {
                 </div>
            </div>
             <nav className="nav-links">
-              <a href="/marketplace">Marketplace</a>
-              <a href="/dashboard">Dashboard</a>
-              <a href="/mylibrary">My Library</a>
+              <Link
+                to="/marketplace"
+                className={`nav-link ${isActive("/marketplace") ? "active" : ""}`}
+              >
+                Marketplace
+              </Link>
+
+              <Link
+                to="/dashboard"
+                className={`nav-link ${isActive("/dashboard") ? "active" : ""}`}
+              >
+                Dashboard
+              </Link>
+
+              <Link
+                to="/mylibrary"
+                className={`nav-link ${isActive("/mylibrary") ? "active" : ""}`}
+              >
+                My Library
+              </Link>
             </nav>
             <div>
               <ConnectWalletButton />
+              <WalConversionButton />
             </div>
           </div>
       <main className="mylib-container">
@@ -153,7 +174,7 @@ export default function MyLibrary() {
           </article>
         </section>
 
-        <section className="section">
+        <section className="mylib-section">
           <div className="section-header">
             <h2>Continue Watching</h2>
             <a className="view-all">View All</a>

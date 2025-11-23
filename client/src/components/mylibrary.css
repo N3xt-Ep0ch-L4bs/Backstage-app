@@ -52,6 +52,8 @@
   max-width: 1180px;
   margin: 28px auto;
   padding: 0 20px;
+  padding: 20px;
+  margin-top: 67px;
 }
 
 .page-title {
@@ -118,7 +120,7 @@
 }
 
 /* SECTIONS */
-.section {
+.mylib-section {
   margin-top: 20px;
 }
 

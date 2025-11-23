@@ -1,9 +1,11 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import ConnectWalletButton from "./ConnectButton";
 import EarningsIcon from "../assets/earnings.png";
 import ViewsIcon from "../assets/views.png";
 import UploadBTS from "./uploadbts";
 import PassesIcon from "../assets/passes.png";
+import { WalConversionButton } from "./walConversionButton";
 import SubscribersIcon from "../assets/suscribers.png";
 import {
   Activity,
@@ -47,6 +49,10 @@ export default function CreatorDashboard() {
     { title: "Your video reached 10K views: 'Director's Cut'", time: "2 days ago", badge: "Milestone" },
   ];
 
+const location = useLocation();
+const isActive = (path: string) => location.pathname === path;
+
+
   return (
     <>
     <div className="dashboard-navbar">
@@ -58,18 +64,35 @@ export default function CreatorDashboard() {
           </div>
      </div>
       <nav className="nav-links">
-        <a href="/marketplace">Marketplace</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/mylibrary">My Library</a>
+        <Link
+          to="/marketplace"
+          className={`nav-link ${isActive("/marketplace") ? "active" : ""}`}
+        >
+          Marketplace
+        </Link>
+
+        <Link
+          to="/dashboard"
+          className={`nav-link ${isActive("/dashboard") ? "active" : ""}`}
+        >
+          Dashboard
+        </Link>
+
+        <Link
+          to="/mylibrary"
+          className={`nav-link ${isActive("/mylibrary") ? "active" : ""}`}
+        >
+          My Library
+        </Link>
       </nav>
       <div>
         <ConnectWalletButton />
+        <WalConversionButton />
       </div>
     </div>
     <div className="dashboard-container">
       <div className="dashboard-inner">
         <div className="layout">
-          {/* Sidebar */}
           <aside className="dashboard-sidebar">
             <nav className="nav-link">
               <a

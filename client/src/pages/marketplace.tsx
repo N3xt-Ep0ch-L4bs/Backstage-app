@@ -1,8 +1,9 @@
 import { useState } from "react";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import ConnectWalletButton from "../components/ConnectButton";
+import { WalConversionButton } from "../components/walConversionButton";
 import "./marketplace.css";
 import Footer from "../components/footer";
 import pic1 from "../assets/pic1.png";
@@ -51,6 +52,9 @@ const Marketplace: React.FC = () => {
 
   const handleCardClick = (id: number) => navigate(`/content/${id}`);
 
+  const location = useLocation();
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <>
       <div className="market-navbar">
@@ -59,12 +63,30 @@ const Marketplace: React.FC = () => {
             <p>Backstage</p>
         </div>
         <nav className="nav-links">
-          <a href="/marketplace">Marketplace</a>
-          <a href="/dashboard">Dashboard</a>
-          <a href="/mylibrary">My Library</a>
+          <Link
+            to="/marketplace"
+            className={`nav-link ${isActive("/marketplace") ? "active" : ""}`}
+          >
+            Marketplace
+          </Link>
+
+          <Link
+            to="/dashboard"
+            className={`nav-link ${isActive("/dashboard") ? "active" : ""}`}
+          >
+            Dashboard
+          </Link>
+
+          <Link
+            to="/mylibrary"
+            className={`nav-link ${isActive("/mylibrary") ? "active" : ""}`}
+          >
+            My Library
+          </Link>
         </nav>
         <div>
           <ConnectWalletButton />
+          <WalConversionButton />
         </div>
       </div>
 

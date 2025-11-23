@@ -4,9 +4,11 @@ import "./components.css";
 import ConnectWalletButton from "./ConnectButton";
 import { WalConversionButton } from "./walConversionButton";
 
-
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <div className="navbar">
@@ -16,38 +18,31 @@ const Navbar: React.FC = () => {
       </div>
 
       <nav className="nav-links">
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/marketplace">Marketplace</NavLink>
-        <NavLink to="/dashboard">Dashboard</NavLink>
+        <Link to="/" className={`nav-link ${isActive("/") ? "active" : ""}`}>
+          Home
+        </Link>
+
+        <Link
+          to="/marketplace"
+          className={`nav-link ${isActive("/marketplace") ? "active" : ""}`}
+        >
+          Marketplace
+        </Link>
+
+        <Link
+          to="/dashboard"
+          className={`nav-link ${isActive("/dashboard") ? "active" : ""}`}
+        >
+          Dashboard
+        </Link>
       </nav>
 
-      <div className="wallet-section" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-        <WalConversionButton />
+      <div className="wallet-section">
+        <WalConversionButton /> 
         <ConnectWalletButton />
       </div>
+      
     </div>
-  );
-};
-
-const NavLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => {
-  const location = useLocation();
-  const isActive = location.pathname === to;
-
-  return (
-    <Link
-      to={to}
-      className={`nav-link ${isActive ? 'active' : ''}`}
-      style={{
-        padding: '0.5rem 1rem',
-        textDecoration: 'none',
-        color: isActive ? '#2563eb' : '#4b5563',
-        fontWeight: isActive ? '600' : '400',
-        borderBottom: isActive ? '2px solid #2563eb' : '2px solid transparent',
-        transition: 'all 0.2s ease-in-out',
-      }}
-    >
-      {children}
-    </Link>
   );
 };
 
