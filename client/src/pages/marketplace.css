@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 8px 32px;
-  background: transparent;
+  background: #000000;
   z-index: 2;
   position: fixed;
   top: 0;
@@ -13,7 +13,7 @@
 }
 
 .marketplace-container {
-    margin-top: 50px;
+  margin-top: 50px;
   display: flex;
   background: #000000;
   color: #fff;

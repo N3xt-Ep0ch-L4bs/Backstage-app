@@ -29,7 +29,7 @@ const LandingPage: React.FC = () => {
     videos: 32,
     rating: 4.6,
     img: "src/assets/pic10.png",
-    cover: "src /assets/pic14.png",
+    cover: "src/assets/pic14.png",
   },
   {
     name: "Nebula Studios",

@@ -29,7 +29,6 @@ const Navbar: React.FC = () => {
   );
 };
 
-// Custom NavLink component for consistent styling
 const NavLink: React.FC<{ to: string; children: React.ReactNode }> = ({ to, children }) => {
   const location = useLocation();
   const isActive = location.pathname === to;

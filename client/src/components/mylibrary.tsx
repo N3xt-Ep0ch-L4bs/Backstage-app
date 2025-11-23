@@ -21,35 +21,35 @@ const continueWatching: VideoItem[] = [
     title: "VFX Masterclass: Epic Battle Breakdown",
     creator: "Luna Films",
     duration: "46:22",
-    thumbnail: HERO_IMAGE,
+    thumbnail: "src/assets/pic21.png",
   },
   {
     id: 2,
     title: "Documentary BTS: Iceland Journey",
     creator: "Alec Rivers",
     duration: "28:15",
-    thumbnail: HERO_IMAGE,
+    thumbnail: "src/assets/pic20.png",
   },
   {
     id: 3,
     title: "Music Video Breakdown: Summer Hit",
     creator: "Echo Studios",
     duration: "35:12",
-    thumbnail: HERO_IMAGE,
+    thumbnail: "src/assets/pic13.png",
   },
   {
     id: 4,
     title: "Director's Commentary: Award Winner",
     creator: "Pheonix Productions",
     duration: "32:30",
-    thumbnail: HERO_IMAGE,
+    thumbnail: "src/assets/pic23.png",
   },
   {
     id: 5,
     title: "Cinematography Tips",
     creator: "Visual Masters",
     duration: "13:08",
-    thumbnail: HERO_IMAGE,
+    thumbnail: "src/assets/pic14.png",
   },
 ];
 
@@ -59,7 +59,7 @@ const newAdditions: VideoItem[] = [
     title: "Fashion Photoshoot: High Fashion BTS",
     creator: "Style Studio",
     duration: "08:22",
-    thumbnail: HERO_IMAGE,
+    thumbnail: "src/assets/pic22.png",
     badge: "NEW",
   },
   {
@@ -67,7 +67,7 @@ const newAdditions: VideoItem[] = [
     title: "Animation Process: Character Design",
     creator: "Pixel Masters",
     duration: "11:04",
-    thumbnail: HERO_IMAGE,
+    thumbnail: "src/assets/pic3.png",
     badge: "NEW",
   },
   {
@@ -75,7 +75,7 @@ const newAdditions: VideoItem[] = [
     title: "Live Concert Recording: Stadium Tour",
     creator: "Sound Wave Media",
     duration: "22:10",
-    thumbnail: HERO_IMAGE,
+    thumbnail: "src/assets/pic25.png",
     badge: "NEW",
   },
   {
@@ -83,7 +83,7 @@ const newAdditions: VideoItem[] = [
     title: "Commercial Production: Product Launch",
     creator: "Brand Vision",
     duration: "09:40",
-    thumbnail: HERO_IMAGE,
+    thumbnail: "src/assets/pic4.png",
     badge: "NEW",
   },
 ];
@@ -217,9 +217,8 @@ export default function MyLibrary() {
             </button>
           </div>
         </section>
-
-        <Footer />
       </main>
+      <Footer />
     </div>
   );
 }
