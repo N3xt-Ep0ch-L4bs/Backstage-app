@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
 import Footer from "../components/footer";
 import TrueLogo from "../assets/true.png";
 import SealLogo from "../assets/seal.png";

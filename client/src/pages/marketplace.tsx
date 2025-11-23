@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Logo from "../assets/logo.png"
 import React from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -59,7 +60,7 @@ const Marketplace: React.FC = () => {
     <>
       <div className="market-navbar">
         <div className="logo" onClick={() => navigate("/")}>
-          <img src="" alt="logo" />
+          <img src={Logo} alt="logo" />
             <p>Backstage</p>
         </div>
         <nav className="nav-links">

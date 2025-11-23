@@ -1,5 +1,6 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import Logo from "../assets/logo.png"
 import ConnectWalletButton from "./ConnectButton";
 import EarningsIcon from "../assets/earnings.png";
 import ViewsIcon from "../assets/views.png";
@@ -57,7 +58,7 @@ const isActive = (path: string) => location.pathname === path;
     <>
     <div className="dashboard-navbar">
       <div className="logo">
-        <img src="" alt="logo" />
+        <img src={Logo} alt="logo" />
           <div>
            <p>Backstage</p>
             <span>Creator</span>

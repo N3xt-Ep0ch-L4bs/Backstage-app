@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import Logo from "../assets/logo.png"
 import ConnectWalletButton from "./ConnectButton";
 import { Link, useLocation, } from "react-router-dom";
 import Footer from "./footer";
@@ -105,7 +106,7 @@ export default function MyLibrary() {
     <div className="mylib-root">
       <div className="dashboard-navbar">
             <div className="logo">
-              <img src="" alt="logo" />
+              <img src={Logo} alt="logo" />
                 <div>
                  <p>Backstage</p>
                   <span>Creator</span>
