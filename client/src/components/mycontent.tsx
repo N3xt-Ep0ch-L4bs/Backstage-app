@@ -20,7 +20,7 @@ const contentItems = [
     price: "$10 USD",
     progress: 40,
     tag: "Documentary",
-    img: "/mnt/data/a5d2d7d3-4251-40cf-90d6-a5a7f50d04f7.png",
+    img: "src/assets/pic25.png",
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ const contentItems = [
     price: "$8 USD",
     progress: 70,
     tag: "Photography",
-    img: "/mnt/data/a5d2d7d3-4251-40cf-90d6-a5a7f50d04f7.png",
+    img: "src/assets/pic24.png",
   },
   {
     id: 3,
@@ -44,7 +44,7 @@ const contentItems = [
     price: "$12 USD",
     progress: 90,
     tag: "Fashion",
-    img: "/mnt/data/a5d2d7d3-4251-40cf-90d6-a5a7f50d04f7.png",
+    img: "src/assets/pic23.png",
   },
   {
     id: 4,
@@ -56,7 +56,7 @@ const contentItems = [
     price: "$7 USD",
     progress: 55,
     tag: "Tutorial",
-    img: "/mnt/data/a5d2d7d3-4251-40cf-90d6-a5a7f50d04f7.png",
+    img: "src/assets/pic22.png",
   },
   {
     id: 5,
@@ -68,7 +68,7 @@ const contentItems = [
     price: "$11 USD",
     progress: 80,
     tag: "Travel",
-    img: "/mnt/data/a5d2d7d3-4251-40cf-90d6-a5a7f50d04f7.png",
+    img: "src/assets/pic26.jpg",
   },
   {
     id: 6,
@@ -80,7 +80,7 @@ const contentItems = [
     price: "$6 USD",
     progress: 30,
     tag: "Masterclass",
-    img: "/mnt/data/a5d2d7d3-4251-40cf-90d6-a5a7f50d04f7.png",
+    img: "src/assets/pic15.png",
   },
   {
     id: 7,
@@ -92,7 +92,7 @@ const contentItems = [
     price: "$14 USD",
     progress: 95,
     tag: "Music",
-    img: "/mnt/data/a5d2d7d3-4251-40cf-90d6-a5a7f50d04f7.png",
+    img: "src/assets/pic13.png",
   },
   {
     id: 8,
@@ -104,7 +104,7 @@ const contentItems = [
     price: "$5 USD",
     progress: 20,
     tag: "Tutorial",
-    img: "/mnt/data/a5d2d7d3-4251-40cf-90d6-a5a7f50d04f7.png",
+    img: "src/assets/pic20.png",
   }
 ];
 
