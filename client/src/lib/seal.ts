@@ -24,9 +24,28 @@ export async function encryptWithSeal(
   packageId: string,
   data: Uint8Array
 ): Promise<{ encryptedData: Uint8Array; id: string }> {
+  console.log('[Encrypt] Starting encryption process...');
+  console.log('[Encrypt] Package ID:', packageId);
+  console.log('[Encrypt] Original data length:', data.length, 'bytes');
+  console.log('[Encrypt] Original data first 20 bytes:', Array.from(data.slice(0, 20)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+  
+  console.log('[Encrypt] Step 1: Creating SEAL client...');
   const client = createSealClient(suiClient);
+  console.log('[Encrypt] SEAL client created with', serverObjectIds.length, 'key servers');
+  
+  console.log('[Encrypt] Step 2: Generating encryption ID...');
   const nonce = crypto.getRandomValues(new Uint8Array(5));
   const id = toHex(nonce);
+  console.log('[Encrypt] Encryption ID generated:', id);
+  console.log('[Encrypt] Nonce bytes:', Array.from(nonce).map(b => b.toString(16).padStart(2, '0')).join(' '));
+  
+  console.log('[Encrypt] Step 3: Encrypting data with SEAL...');
+  console.log('[Encrypt] Encryption parameters:', {
+    threshold: 2,
+    packageId,
+    id,
+    dataLength: data.length
+  });
   
   const { encryptedObject: encryptedData } = await client.encrypt({
     threshold: 2,
@@ -34,6 +53,13 @@ export async function encryptWithSeal(
     id,
     data,
   });
+
+  console.log('[Encrypt] Encryption successful!');
+  console.log('[Encrypt] Encrypted data length:', encryptedData.length, 'bytes');
+  console.log('[Encrypt] Encrypted data first 20 bytes:', Array.from(encryptedData.slice(0, 20)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+  console.log('[Encrypt] Size increase:', ((encryptedData.length - data.length) / data.length * 100).toFixed(2) + '%');
+  console.log('[Encrypt] Encryption ID:', id);
+  console.log('[Encrypt] Encryption process completed successfully!');
 
   return { encryptedData, id };
 }

@@ -8,7 +8,9 @@ import "./uploadbts.css";
 import { useWalrusUploadRelay } from '../hooks/useWalrusUploadRelay';
 import { useVideoAccess } from '../hooks/useVideoAccess';
 import { useSuiClient } from '@mysten/dapp-kit';
-import { decryptWithSeal, createSessionKey, getBlobUrl } from '../lib/seal';
+import { fromBase64 } from '@mysten/sui/utils';
+import { decryptWithSeal, createSessionKey } from '../lib/seal';
+import { walrusClient } from '../lib/walrus';
 
 const UploadBTS: React.FC = () => {
   // ----------------------------
@@ -64,7 +66,6 @@ const UploadBTS: React.FC = () => {
     if (!file) return;
 
     setIsUploading(true);
-    let uploadSuccess = false;
     let walrusBlobId = '';
 
     try {
@@ -75,7 +76,6 @@ const UploadBTS: React.FC = () => {
         description,
         category,
         tags,
-        isEncrypted: true,
         onProgress: (progress: number) => {
           console.log(`Upload progress: ${progress}%`);
         },
@@ -88,7 +88,6 @@ const UploadBTS: React.FC = () => {
       const latestFile = uploadResult[uploadResult.length - 1];
       walrusBlobId = latestFile.blobId ?? latestFile.blobObject?.blob_id ?? "";
       setBlobId(walrusBlobId);
-      uploadSuccess = true;
 
       // 2. Prepare args for createVideo
       const priceInMist = Math.floor(price * 1_000_000_000); // SUI to MIST
@@ -138,12 +137,54 @@ const UploadBTS: React.FC = () => {
     }
     setIsUploading(true);
     try {
+      console.log('[Decrypt] Starting decryption process...');
+      console.log('[Decrypt] Blob ID:', blobId);
+      console.log('[Decrypt] File name:', file.name);
+      console.log('[Decrypt] File type:', file.type);
+      console.log('[Decrypt] File size:', file.size, 'bytes');
+
+      console.log('[Decrypt] Step 1: Creating session key...');
       const sessionKeyObj = await createSessionKey(suiClient, '', '', 10);
-      const serviceUrl = import.meta.env.VITE_WALRUS_BASE_URL || '';
-      const blobUrl = getBlobUrl(blobId, serviceUrl);
-      const response = await fetch(blobUrl);
-      if (!response.ok) throw new Error('Failed to fetch encrypted blob for decryption');
-      const encryptedData = new Uint8Array(await response.arrayBuffer());
+      console.log('[Decrypt] Session key created:', sessionKeyObj);
+
+      console.log('[Decrypt] Step 2: Fetching encrypted blob from Walrus using SDK...');
+      console.log('[Decrypt] Blob ID:', blobId);
+      
+      // Use the SDK's getFiles method to retrieve the blob
+      const walrusFiles = await walrusClient.getFiles({ ids: [blobId] });
+      if (!walrusFiles || walrusFiles.length === 0) {
+        console.error('[Decrypt] No files returned from Walrus');
+        throw new Error('Failed to fetch encrypted blob for decryption');
+      }
+      
+      const walrusFile = walrusFiles[0];
+      console.log('[Decrypt] File retrieved from Walrus');
+      console.log('[Decrypt] File identifier:', await walrusFile.getIdentifier());
+      console.log('[Decrypt] File tags:', await walrusFile.getTags());
+      
+      // Get the encrypted data - check if it's base64 encoded
+      const fileTags = await walrusFile.getTags();
+      const isBase64 = fileTags?.encoding === 'base64';
+      
+      console.log('[Decrypt] File encoding:', isBase64 ? 'base64' : 'raw bytes');
+      
+      let encryptedData: Uint8Array;
+      if (isBase64) {
+        console.log('[Decrypt] Decoding base64 string to bytes using Sui SDK...');
+        // Get the base64 string from the file
+        const base64String = await walrusFile.text();
+        // Convert base64 string back to Uint8Array using Sui SDK
+        encryptedData = fromBase64(base64String);
+        console.log('[Decrypt] Base64 decoded, encrypted data length:', encryptedData.length, 'bytes');
+      } else {
+        // Fallback to bytes() if not base64
+        encryptedData = await walrusFile.bytes();
+        console.log('[Decrypt] Encrypted data fetched as raw bytes:', encryptedData.length, 'bytes');
+      }
+
+      console.log('[Decrypt] Step 3: Decrypting with SEAL...');
+      console.log('[Decrypt] Encrypted data length:', encryptedData.length);
+      console.log('[Decrypt] Encrypted data first 20 bytes:', Array.from(encryptedData.slice(0, 20)).map(b => b.toString(16).padStart(2, '0')).join(' '));
 
       const decryptedData = await decryptWithSeal(
         suiClient,
@@ -152,14 +193,28 @@ const UploadBTS: React.FC = () => {
         () => {}
       );
 
+      console.log('[Decrypt] Decryption successful!');
+      console.log('[Decrypt] Decrypted data length:', decryptedData.length, 'bytes');
+      console.log('[Decrypt] Decrypted data first 20 bytes:', Array.from(decryptedData.slice(0, 20)).map(b => b.toString(16).padStart(2, '0')).join(' '));
+
+      console.log('[Decrypt] Step 4: Creating blob from decrypted data...');
       const buffer = decryptedData.buffer instanceof SharedArrayBuffer
         ? new Uint8Array(decryptedData).buffer
         : decryptedData.buffer;
       const blob = new Blob([buffer], { type: file.type });
+      console.log('[Decrypt] Blob created:', blob.size, 'bytes, type:', blob.type);
+      
       const url = URL.createObjectURL(blob);
+      console.log('[Decrypt] Object URL created:', url);
       setDecryptedUrl(url);
+      console.log('[Decrypt] Decryption process completed successfully!');
     } catch (error) {
-      console.error('Decryption failed:', error);
+      console.error('[Decrypt] Decryption failed:', error);
+      console.error('[Decrypt] Error details:', {
+        name: error instanceof Error ? error.name : 'Unknown',
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined
+      });
       alert(error instanceof Error ? error.message : 'Decryption failed');
     } finally {
       setIsUploading(false);

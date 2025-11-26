@@ -26,9 +26,9 @@ export function useVideoAccess() {
       if (!currentAccount?.address) {
         throw new Error('No wallet connected');
       }
-
+ 
       const tx = new Transaction();
-      tx.moveCall({
+      const cap = tx.moveCall({
         target: `${packageId}::video_access::create_video`,
         typeArguments: [],
         arguments: [
@@ -42,6 +42,8 @@ export function useVideoAccess() {
           tx.pure(bcs.u64().serialize(BigInt(metadata.scarcity))),
         ],
       });
+
+      tx.transferObjects([cap], currentAccount.address);
 
       const result = await signAndExecuteTransaction({
         transaction: tx,
